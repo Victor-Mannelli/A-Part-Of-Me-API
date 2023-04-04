@@ -9,3 +9,26 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  user_id  Int       @id @default(autoincrement())
+  email    String    @unique
+  password String
+  username String
+  Session  Session[]
+  Friend   Friend[]
+}
+
+model Session {
+  session_id        Int      @id @default(autoincrement())
+  user_id_reference User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user_id           Int
+  created_at        DateTime @default(now())
+  token             String   @unique
+}
+
+model Friend {
+  id                  Int  @id @default(autoincrement())
+  friend_id_reference User @relation(fields: [friend_id], references: [user_id], onDelete: Cascade)
+  friend_id           Int
+}
