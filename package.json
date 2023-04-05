@@ -2,11 +2,13 @@
   "name": "a-part-of-me-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.ts",
+    "ws": "ts-node --esm ./src/websocket.ts",
+    "prepare": "husky install",
+    "pre-commit": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -34,6 +36,10 @@
     "@types/node": "^18.15.9",
     "@types/pg": "^8.6.6",
     "@types/ws": "^8.5.4",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.37.0",
+    "husky": "^8.0.3",
     "nodemon": "^2.0.22",
     "prisma": "^4.11.0",
     "ts-node": "^10.9.1",

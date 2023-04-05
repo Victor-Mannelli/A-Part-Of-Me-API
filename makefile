@@ -1,6 +1,9 @@
 dev:
 	clear && npm run dev
 
+ws:
+	npm run ws
+
 studio:
 	npx prisma studio
 
@@ -21,3 +24,5 @@ dbseed:
 
 seed:
 	npx ts-node ./utils/seed.ts
+
+   
