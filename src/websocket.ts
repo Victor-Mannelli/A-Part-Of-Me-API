@@ -1,19 +1,20 @@
-import express from 'express';
-import http from 'http';
-import WebSocket from 'ws';
+import { io } from './server.js';
+// import { newMessage } from './services/messageServices/messageServices.js';
 
-const port = 6969;
-const server = http.createServer(express);
-const wss = new WebSocket.Server({ server });
-
-wss.on('connection', function connection(ws) {
-  ws.on('message', function incoming(data) {
-    wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(data);
+io.on('connection', (socket: any) => {
+  socket.on('channelConnect', async (data: any) => {
+    if (data.profile.length !== 0) {
+      for (let i = 1; i <= 6; i++) {
+        socket.leave(i);
       }
-    });
-  }); 
+      socket.join(data.channel);
+      // const message = `${data.profile.name} se conectou ao canal ${data.channel}`;
+      // await newMessage(data.profile.id, message);
+      io.to(data.channel).emit('channelConnect', data);
+    }
+  });
+  socket.on('newMessage', async (data: any) => {
+    // await newMessage(data.profile.id, data.message);
+    io.to(data.channel).emit('newMessage', data.message);
+  });
 });
-
-server.listen(port, () => console.log(`WebSocket is listening on port ${port}`));
