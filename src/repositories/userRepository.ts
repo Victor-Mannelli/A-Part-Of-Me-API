@@ -36,21 +36,21 @@ export async function findUserId(token: string) {
     }
   });
 }
-// export async function changePassword(params: types.ChangePassword) {
-//   await prisma.user.update({
-//     where: {
-//       id: params.userId
-//     },
-//     data: {
-//       password: params.newHashedPassword
-//     }
-//   });
-// }
+export async function changePassword(params: types.ChangePassword) {
+  await prisma.user.update({
+    where: {
+      user_id: params.userId
+    },
+    data: {
+      password: params.newHashedPassword
+    }
+  });
+}
 
-// export async function deleteAccount(userId: number) {
-//   await prisma.user.delete({
-//     where: {
-//       id: userId
-//     }
-//   });
-// }
+export async function deleteAccount(userId: number) {
+  await prisma.user.delete({
+    where: {
+      user_id: userId
+    }
+  });
+}

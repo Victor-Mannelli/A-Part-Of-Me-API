@@ -37,4 +37,3 @@ export async function deleteAccount(userId: number) {
     return;
   }
 }
-

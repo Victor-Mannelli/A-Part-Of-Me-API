@@ -17,6 +17,8 @@ model User {
   username String
   Session  Session[]
   Friend   Friend[]
+
+  @@map("users")
 }
 
 model Session {
@@ -25,10 +27,14 @@ model Session {
   user_id           Int
   created_at        DateTime @default(now())
   token             String   @unique
+
+  @@map("sessions")
 }
 
 model Friend {
   id                  Int  @id @default(autoincrement())
   friend_id_reference User @relation(fields: [friend_id], references: [user_id], onDelete: Cascade)
   friend_id           Int
+
+  @@map("friends")
 }
