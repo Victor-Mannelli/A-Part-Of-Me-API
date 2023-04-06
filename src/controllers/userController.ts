@@ -1,26 +1,26 @@
 import { Request, Response } from 'express';
-import { v4 as uuid } from 'uuid';
-import * as userService from '../services/userService';
+import { changePasswordService, createNewUserService, deleteAccountService, loginService } from '../services';
 import * as types from '../utils/types/index';
 
 export async function singUp(req: Request, res: Response) {
   try {
     const body: types.SignUpBody = req.body;
-    await userService.createNewUser(body);
-    res.status(201).send({ message: 'User Created' });
-
+    const response = await createNewUserService(body);
+    response === 'error' 
+      ? res.status(401).send({ message: 'Email is already registered' })
+      : res.status(201).send({ message: 'User created successfully!' });
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);
   }
 }
-export async function singIn(_req: Request, res: Response) {
+export async function singIn(req: Request, res: Response) {
   try {
-    const userId: number = res.locals.user.id;
-    const token: string = uuid();
-    await userService.login({ userId, token });
-    res.status(200).send(token);
-
+    const body: types.SignInBody = req.body;
+    const response = await loginService(body);
+    // response === 'This email is not registered' && res.status(401).send({message: 'This email is not registered'});
+    // response === 'Password is incorrect' && res.status(401).send({message: 'Password is incorrect'});
+    res.status(200).send(response);
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);
@@ -30,7 +30,7 @@ export async function changePassword(req: Request, res: Response) {
   try {
     const userId: number = res.locals.user.id;
     const newPassword: string = req.body.password;
-    await userService.changePassword({ userId, newPassword });
+    await changePasswordService({ userId, newPassword });
     res.status(200).send({ message: 'Password Changed Successfully' });
 
   } catch (error) {
@@ -41,7 +41,7 @@ export async function changePassword(req: Request, res: Response) {
 export async function deleteAccount(_req: Request, res: Response) {
   try {
     const userId = res.locals.user.user_id;
-    await userService.deleteAccount(userId);
+    await deleteAccountService(userId);
     res.status(200).send({ message: 'User Deleted Successfully' });
 
   } catch (error) {

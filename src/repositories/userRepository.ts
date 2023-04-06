@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function checkEmail(email: string) {
   return await prisma.user.findFirst({
     where: {
-      email: email
+      email
     }
   });
 }
@@ -25,6 +25,9 @@ export async function login(params: types.Login) {
     data: {
       user_id: params.userId,
       token: params.token
+    },
+    select: {
+      token: true
     }
   });
 }

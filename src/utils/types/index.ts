@@ -1,9 +1,10 @@
 export type SignUpBody = {
   email: string,
   username: string,
-  password: string
+  password: string,
+  confirmPassword: string
 }
-export type CreateNewUser = Omit<SignUpBody, 'password'> & {
+export type CreateNewUser = Omit<SignUpBody, 'password' | 'confirmPassword'> & {
   hashedPassword: string
 }
 

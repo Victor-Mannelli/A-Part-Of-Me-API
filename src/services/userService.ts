@@ -1,37 +1,40 @@
 import bcrypt from 'bcrypt';
-import * as userRepository from '../repositories/userRepository';
+import { v4 as uuid } from 'uuid';
+import { changePassword, checkEmail, createNewUser, deleteAccount, login } from '../repositories';
 import * as types from '../utils/types/index';
 
-export async function createNewUser(params: types.SignUpBody) {
-  try {
-    const hashedPassword: string = bcrypt.hashSync(params.password, 10);
-    await userRepository.createNewUser({ email: params.email, username: params.username, hashedPassword });
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-}
-export async function login(params: types.Login) {
-  try {
-    await userRepository.login({ userId: params.userId, token: params.token });
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-}
+export async function createNewUserService(params: types.SignUpBody) {
+  const result = await checkEmail(params.email);
+  if (result !== null) return 'error';
+  // if (result !== null) throw new 401;
 
-export async function changePassword(params: types.ChangePasswordBody) {
+  const hashedPassword: string = bcrypt.hashSync(params.password, 10);
+  await createNewUser({ email: params.email, username: params.username, hashedPassword });
+  return;
+}
+export async function loginService(params: types.SignInBody) {
+  const user = await checkEmail(params.email);
+  if (user === null) return {message: 'This email is not registered'};
+
+  if (!bcrypt.compareSync(params.password, user.password)) {
+    return {message: 'Password is incorrect'};
+  }
+
+  const userId: number = user.user_id;
+  return await login({ userId, token: uuid() });
+}
+export async function changePasswordService(params: types.ChangePasswordBody) {
   try {
     const newHashedPassword = bcrypt.hashSync(params.newPassword, 10);
-    await userRepository.changePassword({userId: params.userId, newHashedPassword});
+    await changePassword({userId: params.userId, newHashedPassword});
   } catch (error) {
     console.log(error);
     return;
   }
 }
-export async function deleteAccount(userId: number) {
+export async function deleteAccountService(userId: number) {
   try {
-    await userRepository.deleteAccount(userId);
+    await deleteAccount(userId);
   } catch (error) {
     console.log(error);
     return;
