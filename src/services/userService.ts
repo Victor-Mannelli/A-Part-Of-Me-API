@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
-import { changePassword, checkEmail, createNewUser, deleteAccount, login } from '../repositories';
+import { changePassword, checkEmail, checkUsername, createNewUser, deleteAccount, deleteUserSessions, findFirstUserData, logingUser } from '../repositories';
 import * as types from '../utils/types/index';
 
 export async function createNewUserService(params: types.SignUpBody) {
@@ -12,31 +12,28 @@ export async function createNewUserService(params: types.SignUpBody) {
   await createNewUser({ email: params.email, username: params.username, hashedPassword });
   return;
 }
-export async function loginService(params: types.SignInBody) {
-  const user = await checkEmail(params.email);
-  if (user === null) return {message: 'This email is not registered'};
+export async function loginService({ login, password }: { login: string, password: string }) {
+  let user;
+  login.includes('@')
+    ? user = await checkEmail(login)
+    : user = await checkUsername(login);
+  if (user === null) return 'user404';
 
-  if (!bcrypt.compareSync(params.password, user.password)) {
-    return {message: 'Password is incorrect'};
+  if (!bcrypt.compareSync(password, user.password)) {
+    return 'wrongPass';
   }
 
   const userId: number = user.user_id;
-  return await login({ userId, token: uuid() });
+  await deleteUserSessions(userId);
+  return await logingUser({ userId, token: uuid() });
+}
+export async function getUserDataService(userId: number) {
+  return await findFirstUserData(userId);
 }
 export async function changePasswordService(params: types.ChangePasswordBody) {
-  try {
-    const newHashedPassword = bcrypt.hashSync(params.newPassword, 10);
-    await changePassword({userId: params.userId, newHashedPassword});
-  } catch (error) {
-    console.log(error);
-    return;
-  }
+  const newHashedPassword = bcrypt.hashSync(params.newPassword, 10);
+  return await changePassword({ userId: params.userId, newHashedPassword });
 }
 export async function deleteAccountService(userId: number) {
-  try {
-    await deleteAccount(userId);
-  } catch (error) {
-    console.log(error);
-    return;
-  }
+  return await deleteAccount(userId);
 }

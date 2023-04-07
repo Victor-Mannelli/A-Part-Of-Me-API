@@ -9,7 +9,7 @@ export type CreateNewUser = Omit<SignUpBody, 'password' | 'confirmPassword'> & {
 }
 
 export type SignInBody = {
-  email: string,
+  login: string,
   password: string
 }
 export type Login = {

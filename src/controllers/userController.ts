@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { changePasswordService, createNewUserService, deleteAccountService, loginService } from '../services';
+import { changePasswordService, createNewUserService, deleteAccountService, getUserDataService, loginService } from '../services';
 import * as types from '../utils/types/index';
 
 export async function singUp(req: Request, res: Response) {
@@ -18,9 +18,18 @@ export async function singIn(req: Request, res: Response) {
   try {
     const body: types.SignInBody = req.body;
     const response = await loginService(body);
-    // response === 'This email is not registered' && res.status(401).send({message: 'This email is not registered'});
-    // response === 'Password is incorrect' && res.status(401).send({message: 'Password is incorrect'});
+    if (response === 'user404') res.status(404).send({message: 'This email is not registered'});
+    if (response === 'wrongPass') res.status(401).send({message: 'Password is incorrect'});
     res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+export async function getUserData(req: Request, res: Response) {
+  try {
+    const userId: number = res.locals.user.id;
+    return await getUserDataService(userId);
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);

@@ -10,6 +10,14 @@ export async function checkEmail(email: string) {
     }
   });
 }
+export async function checkUsername(username: string) {
+  return await prisma.user.findFirst({
+    where: {
+      username
+    }
+  });
+}
+
 export async function createNewUser(params: types.CreateNewUser) {
   await prisma.user.create({
     data: {
@@ -19,23 +27,37 @@ export async function createNewUser(params: types.CreateNewUser) {
     }
   });
 }
-
-export async function login(params: types.Login) {
-  await prisma.session.create({
+export async function logingUser({ userId, token} : { userId: number, token: string}) {
+  return await prisma.session.create({
     data: {
-      user_id: params.userId,
-      token: params.token
+      user_id: userId,
+      token
     },
     select: {
       token: true
     }
   });
 }
+export async function findFirstUserData( userId: number ) {
+  return await prisma.user.findFirst({
+    where: {
+      user_id: userId
+    },
+    // include
+  });
+}
 
+export async function deleteUserSessions( userId : number ) {
+  await prisma.session.deleteMany({
+    where: {
+      user_id: userId
+    }
+  });
+}
 export async function findUserId(token: string) {
   return await prisma.session.findFirst({
     where: {
-      token: token
+      token
     }
   });
 }
