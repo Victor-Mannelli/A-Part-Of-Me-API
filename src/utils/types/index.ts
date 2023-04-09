@@ -24,3 +24,9 @@ export type ChangePasswordBody = {
 export type ChangePassword = Omit<ChangePasswordBody, 'newPassword'> & {
   newHashedPassword: string
 }
+
+export type ApplicationError = {
+  status: number,
+  name: string;
+  message: string;
+}

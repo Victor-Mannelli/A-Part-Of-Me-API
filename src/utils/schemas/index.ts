@@ -13,3 +13,13 @@ export const signUpSchema = joi.object({
 export const changePasswordSchema = joi.object({
   password: joi.string().min(6).required()
 });
+
+export const messageSchema = joi.object({
+  message: joi.string().required()
+});
+export const messageReceiverSchema = joi.object({
+  receiverId: joi.number().required()
+});
+export const messageAuthorSchema = joi.object({
+  authorId: joi.number().required()
+});

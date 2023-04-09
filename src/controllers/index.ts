@@ -1,2 +1,2 @@
-// export * from './messageController';
+export * from './messageController';
 export * from './userController';

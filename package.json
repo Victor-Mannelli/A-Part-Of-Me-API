@@ -1,5 +1,5 @@
 {
-  "name": "a-part-of-me-api",
+  "name": "pome-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
@@ -12,21 +12,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Victor-Mannelli/A-Part-Of-Me-API.git"
+    "url": "git+https://github.com/Victor-Mannelli/pome-API.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Victor-Mannelli/A-Part-Of-Me-API/issues"
+    "url": "https://github.com/Victor-Mannelli/pome-API/issues"
   },
-  "homepage": "https://github.com/Victor-Mannelli/A-Part-Of-Me-API#readme",
+  "homepage": "https://github.com/Victor-Mannelli/pome-API#readme",
   "dependencies": {
     "@prisma/client": "^4.12.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "http-status": "^1.6.2",
     "joi": "^17.9.1",
     "pg": "^8.10.0",
     "socket.io": "^4.6.1",

@@ -1,25 +1,26 @@
-// import { Request, Response } from 'express';
-// import { getMessages, postMessage } from '../services';
+import { Request, Response } from 'express';
+import { getMessagesService, postMessageService } from '../services';
+import httpStatus from 'http-status';
 
-// export async function getMessagesController(_req: Request, res: Response) {
-//   try {
-//     const user = res.locals;
-//     const messages = await getMessages(user);
-//     return res.status(200).send(messages);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).send({ message: 'Erro Interno do Servidor' });
-//   }
-// }
+export async function getMessagesController(req: Request, res: Response) {
+  const messages = await getMessagesService({ 
+    authorId: Number(req.params.authorId),
+    receiverId: res.locals.user.user_id
+  });
+  return res.status(httpStatus.OK).send(messages);
+}
 
-// export async function postMessageController(req: Request, res: Response)  {
-//   try {
-//     const message = req.body;
-//     const user = res.locals;
-//     const newMessage = await postMessage(user, message.text);
-//     res.status(201).send({ message: 'Mensagem gravada com sucesso', newMessage });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).send({ message: 'Erro interno do servidor' });
-//   }
-// }
+export async function postMessageController(req: Request, res: Response) {
+  await postMessageService({ 
+    authorId: res.locals.user.user_id, 
+    receiverId: Number(req.params.receiverId), 
+    message: req.body.message
+  });
+  return res.sendStatus(httpStatus.CREATED);
+  // console.log(res.locals.user_id);
+  // return res.status(httpStatus.CREATED).send({
+  //   authorId: res.locals.user.user_id, 
+  //   receiverId: Number(req.params.receiverId), 
+  //   message: req.body.message
+  // });
+}

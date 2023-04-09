@@ -1,9 +1,10 @@
-import express from 'express';
+import './setup';
+import express, { json } from 'express';
 import cors from 'cors';
 import http from 'http';
-import Routers from './routers/routers';
 import { Server } from 'socket.io';
-import './setup';
+import { handleApplicationErrors } from './middlewares';
+import { messageRouter, userRouter } from './routers';
 
 const app = express();
 const serverHttp = http.createServer(app);
@@ -13,7 +14,9 @@ const io = new Server(serverHttp, {
 
 app
   .use(cors())
-  .use(express.json())
-  .use(Routers);
+  .use(json())
+  .use(messageRouter)
+  .use(userRouter)
+  .use(handleApplicationErrors);
 
 export { serverHttp, io, app };

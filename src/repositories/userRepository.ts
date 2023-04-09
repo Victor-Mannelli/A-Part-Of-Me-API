@@ -17,6 +17,13 @@ export async function checkUsername(username: string) {
     }
   });
 }
+export async function findUserById(userId: number) {
+  return await prisma.user.findFirst({
+    where: {
+      user_id: userId
+    }
+  });
+}
 
 export async function createNewUser(params: types.CreateNewUser) {
   await prisma.user.create({

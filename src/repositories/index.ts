@@ -1,2 +1,2 @@
 export * from './userRepository';
-// export * from './messageRepository';
+export * from './messageRepository';
