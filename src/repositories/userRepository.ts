@@ -34,7 +34,7 @@ export async function createNewUser(params: types.CreateNewUser) {
     }
   });
 }
-export async function logingUser({ userId, token} : { userId: number, token: string}) {
+export async function logingUser({ userId, token }: { userId: number, token: string }) {
   return await prisma.session.create({
     data: {
       user_id: userId,
@@ -45,16 +45,19 @@ export async function logingUser({ userId, token} : { userId: number, token: str
     }
   });
 }
-export async function findFirstUserData( userId: number ) {
+export async function findFirstUserData(userId: number) {
   return await prisma.user.findFirst({
     where: {
       user_id: userId
     },
-    // include
+    select: {
+      username: true,
+      user_id: true,
+    }
   });
 }
 
-export async function deleteUserSessions( userId : number ) {
+export async function deleteUserSessions(userId: number) {
   await prisma.session.deleteMany({
     where: {
       user_id: userId
@@ -78,11 +81,46 @@ export async function changePassword(params: types.ChangePassword) {
     }
   });
 }
-
 export async function deleteAccount(userId: number) {
   await prisma.user.delete({
     where: {
       user_id: userId
+    }
+  });
+}
+
+export async function findUserFriends(userId: number) {
+  return await prisma.user.findFirst({
+    where: {
+      user_id: userId
+    },
+    select: {
+      friendshipsAsUser: {
+        select: {
+          friend: {
+            select: {
+              user_id: true,
+              username: true
+            }
+          }
+        }
+      }
+    }
+  });
+}
+export async function postFriendRequest(userId: number, friendId: number) {
+  return await prisma.friendRequest.create({
+    data: {
+      requester_id: userId,
+      requested_id: friendId
+    }
+  });
+}
+export async function getUsersList() {
+  return await prisma.user.findMany({
+    select: {
+      user_id: true,
+      username: true,
     }
   });
 }

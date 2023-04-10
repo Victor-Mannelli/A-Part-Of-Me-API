@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/index.ts",
     "ws": "ts-node --esm ./src/websocket.ts",
     "prepare": "husky install",
-    "pre-commit": "eslint . --fix"
+    "pre-commit": "eslint . --fix",
+    "seed": "npx prisma db seed"
   },
   "repository": {
     "type": "git",

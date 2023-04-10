@@ -31,5 +31,5 @@ export async function postMessageService({
     message: 'Message receiver not found'
   });
 
-  await postMessages({ authorId, receiverId, message });
+  return await postMessages({ authorId, receiverId, message });
 }

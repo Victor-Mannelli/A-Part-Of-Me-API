@@ -11,16 +11,10 @@ export async function getMessagesController(req: Request, res: Response) {
 }
 
 export async function postMessageController(req: Request, res: Response) {
-  await postMessageService({ 
+  const response = await postMessageService({ 
     authorId: res.locals.user.user_id, 
     receiverId: Number(req.params.receiverId), 
     message: req.body.message
   });
-  return res.sendStatus(httpStatus.CREATED);
-  // console.log(res.locals.user_id);
-  // return res.status(httpStatus.CREATED).send({
-  //   authorId: res.locals.user.user_id, 
-  //   receiverId: Number(req.params.receiverId), 
-  //   message: req.body.message
-  // });
+  return res.status(httpStatus.CREATED).send(response);
 }

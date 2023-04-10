@@ -23,11 +23,11 @@ export async function postMessages({
     receiverId: number,
     message: string
   }) {
-  await prisma.message.create({
+  return await prisma.message.create({
     data: {
       author_id: authorId,
       receiver_id: receiverId,
       message
-    }
+    },
   });
 }

@@ -18,11 +18,8 @@ test:
 dbsetup:
 	npx prisma generate
 	npx prisma migrate dev
-	
-dbseed:
-	node ./dist/utils/seeddb.js
 
 seed:
-	npx ts-node ./utils/seed.ts
+	npm run seed
 
    
