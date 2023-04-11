@@ -20,7 +20,7 @@ model User {
   receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
   friendshipsAsUser      Friendship[]    @relation("FriendshipsAsUser")
   friendshipsAsFriend    Friendship[]    @relation("FriendshipsAsFriend")
-  messages               Message[]       @relation("MessageAuthor")
+  messages_sent          Message[]       @relation("MessageAuthor")
   messages_received      Message[]       @relation("MessageReceiver")
 
   @@map("users")

@@ -108,14 +108,6 @@ export async function findUserFriends(userId: number) {
     }
   });
 }
-export async function postFriendRequest(userId: number, friendId: number) {
-  return await prisma.friendRequest.create({
-    data: {
-      requester_id: userId,
-      requested_id: friendId
-    }
-  });
-}
 export async function getUsersList() {
   return await prisma.user.findMany({
     select: {

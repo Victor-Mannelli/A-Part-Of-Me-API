@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { v4 as uuid } from 'uuid';
-import { changePassword, checkEmail, checkUsername, createNewUser, deleteAccount, deleteUserSessions, findFirstUserData, findUserFriends, getUsersList, logingUser, postFriendRequest } from '../repositories';
+import { changePassword, checkEmail, checkUsername, createNewUser, deleteAccount, deleteUserSessions, findFirstUserData, findUserFriends, getUsersList, logingUser } from '../repositories';
 import { CustomError } from '../middlewares';
 import { ChangePasswordBody, SignUpBody } from '../utils/types';
 
@@ -47,9 +47,6 @@ export async function deleteAccountService(userId: number) {
 
 export async function getUserFriendListService(userId: number) {
   return await findUserFriends(userId);
-}
-export async function sendFriendRequestService({ userId, friendId }: { userId: number, friendId: number }) {
-  return await postFriendRequest(userId, friendId);
 }
 export async function allUsersService(){
   return await getUsersList();

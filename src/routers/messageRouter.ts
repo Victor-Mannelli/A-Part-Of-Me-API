@@ -6,16 +6,8 @@ import { messageReceiverSchema, messageAuthorSchema, messageSchema } from '../ut
 const messageRouter = Router();
 
 messageRouter
-  .get('/messages', 
-    validateAuth, 
-    JoiValidation(messageAuthorSchema, 'params'), 
-    getMessagesController
-  )
-  .post('/messages',
-    validateAuth,
-    JoiValidation(messageReceiverSchema, 'params'),
-    JoiValidation(messageSchema, 'body'),
-    postMessageController
-  );
+  .use(validateAuth)
+  .get('/:authorId', JoiValidation(messageAuthorSchema, 'params'), getMessagesController)
+  .post('/:receiverId', JoiValidation(messageReceiverSchema, 'params'), JoiValidation(messageSchema, 'body'), postMessageController);
 
 export { messageRouter };
