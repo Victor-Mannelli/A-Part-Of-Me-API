@@ -17,7 +17,7 @@ app
   .use(json())
   .use('/users', userRouter)
   .use('/messages', messageRouter)
-  .use(friendRouter)
+  .use('/friends',friendRouter)
   .use(authRouter)
   .use(handleApplicationErrors);
 

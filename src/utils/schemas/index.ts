@@ -23,6 +23,11 @@ export const messageReceiverSchema = joi.object({
 export const messageAuthorSchema = joi.object({
   authorId: joi.number().required()
 });
-export const friendRequestId = joi.object({
+export const friendIdSchema = joi.object({
   friend_id: joi.number().required()
+});
+export const friendRequestSchema = joi.object({
+  friend_request_id: joi.number().required(),
+  requester_id: joi.number().required(),
+  requested_id: joi.number().required()
 });
