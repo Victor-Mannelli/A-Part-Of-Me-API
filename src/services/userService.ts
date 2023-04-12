@@ -44,10 +44,6 @@ export async function changePasswordService(params: ChangePasswordBody) {
 export async function deleteAccountService(userId: number) {
   return await deleteAccount(userId);
 }
-
-export async function getUserFriendListService(userId: number) {
-  return await findUserFriends(userId);
-}
 export async function allUsersService(){
   return await getUsersList();
 }

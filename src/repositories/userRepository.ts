@@ -89,25 +89,6 @@ export async function deleteAccount(userId: number) {
   });
 }
 
-export async function findUserFriends(userId: number) {
-  return await prisma.user.findFirst({
-    where: {
-      user_id: userId
-    },
-    select: {
-      friendshipsAsUser: {
-        select: {
-          friend: {
-            select: {
-              user_id: true,
-              username: true
-            }
-          }
-        }
-      }
-    }
-  });
-}
 export async function getUsersList() {
   return await prisma.user.findMany({
     select: {

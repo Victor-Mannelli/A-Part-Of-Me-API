@@ -12,8 +12,14 @@ export async function getMessages({
   return await prisma.message.findMany({
     where: {
       OR: [
-        {author_id: authorId},
-        {author_id: receiverId},
+        {
+          author_id: authorId,
+          receiver_id: receiverId,
+        },
+        {
+          author_id: receiverId,
+          receiver_id: authorId
+        },
       ]
     },
     orderBy: {

@@ -1,5 +1,8 @@
-import { acceptFriendRequest, getFriendRequests, postFriendRequest } from '../repositories';
+import { acceptFriendRequest, findUserFriends, getFriendRequests, postFriendRequest } from '../repositories';
 
+export async function getUserFriendListService(userId: number) {
+  return await findUserFriends(userId);
+}
 export async function getFriendRequestsService(userId: number) {
   return await getFriendRequests(userId);
 }

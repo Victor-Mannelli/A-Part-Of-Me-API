@@ -1,8 +1,8 @@
 import joi from 'joi';
 
 export const signInSchema = joi.object({
-  login: joi.string().min(3).required(),
-  password: joi.string().min(6).required(),
+  login: joi.string().required(),
+  password: joi.string().required(),
 });
 export const signUpSchema = joi.object({
   email: joi.string().email().required(),

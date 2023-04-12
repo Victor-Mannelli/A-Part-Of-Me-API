@@ -57,12 +57,4 @@ export async function allUsers(req: Request, res: Response) {
     return res.sendStatus(500);
   }
 }
-export async function userFriendList(_req: Request, res: Response) {
-  try {
-    const userId: number = res.locals.user.user_id;
-    const response = await getUserFriendListService(userId);
-    res.status(200).send(response);
-  } catch (error) {
-    return res.sendStatus(500);
-  }
-}
+

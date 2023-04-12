@@ -1,5 +1,15 @@
 import { Request, Response } from 'express';
-import { acceptFriendRequestService, getFriendRequestsService, sendFriendRequestsService } from '../services';
+import { acceptFriendRequestService, getFriendRequestsService, getUserFriendListService, sendFriendRequestsService } from '../services';
+
+export async function getFriendList(_req: Request, res: Response) {
+  try {
+    const userId: number = res.locals.user.user_id;
+    const response = await getUserFriendListService(userId);
+    res.status(200).send(response);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+}
 
 export async function getFriendRequests(_req: Request, res: Response) {
   const userId: number = res.locals.user.user_id;
