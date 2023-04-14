@@ -10,6 +10,7 @@ export async function findUserFriends(userId: number) {
     select: {
       friendshipsAsUser: {
         select: {
+          created_at: true,
           friend: {
             select: {
               user_id: true,
@@ -23,7 +24,7 @@ export async function findUserFriends(userId: number) {
           user: {
             select: {
               user_id: true,
-              username: true
+              username: true,
             }
           }
         }

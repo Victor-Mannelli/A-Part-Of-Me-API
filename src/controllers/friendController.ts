@@ -6,28 +6,44 @@ export async function getFriendList(_req: Request, res: Response) {
     const userId: number = res.locals.user.user_id;
     const response = await getUserFriendListService(userId);
     res.status(200).send(response);
-  } catch (error) {
-    return res.sendStatus(500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
   }
 }
 
 export async function getFriendRequests(_req: Request, res: Response) {
-  const userId: number = res.locals.user.user_id;
-  const friendRequests = await getFriendRequestsService(userId);
-  return res.status(200).send(friendRequests);
+  try {
+    const userId: number = res.locals.user.user_id;
+    const friendRequests = await getFriendRequestsService(userId);
+    return res.status(200).send(friendRequests);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
+  }
 }
 
 export async function sendFriendRequest(req: Request, res: Response) {
-  const userId: number = res.locals.user.user_id;
-  const response = await sendFriendRequestsService({ userId, friendId: req.body.friend_id });
-  return res.status(200).send(response);
+  try {
+    const userId: number = res.locals.user.user_id;
+    const response = await sendFriendRequestsService({ userId, friendId: req.body.friend_id });
+    return res.status(200).send(response);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
+  }
 }
 
 export async function acceptFriendRequest(req: Request, res: Response) {
-  await acceptFriendRequestService({
-    friendRequestId: req.body.friend_request_id,
-    requesterId: req.body.requester_id,
-    requestedId: req.body.requested_id
-  });
-  return res.sendStatus(200);
+  try {
+    await acceptFriendRequestService({
+      friendRequestId: req.body.friend_request_id,
+      requesterId: req.body.requester_id,
+      requestedId: req.body.requested_id
+    });
+    return res.sendStatus(200);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
+  }
 }

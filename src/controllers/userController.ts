@@ -7,8 +7,9 @@ export async function singUp(req: Request, res: Response) {
     const body: types.SignUpBody = req.body;
     await createNewUserService(body);
     res.status(201).send({ message: 'User created successfully!' });
-  } catch (error) {
-    return res.sendStatus(500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
   }
 }
 export async function singIn(req: Request, res: Response) {
@@ -16,8 +17,9 @@ export async function singIn(req: Request, res: Response) {
     const body: types.SignInBody = req.body;
     const response = await loginService(body);
     res.status(200).send(response);
-  } catch (error) {
-    return res.sendStatus(500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
   }
 }
 export async function userData(_req: Request, res: Response) {
@@ -25,8 +27,9 @@ export async function userData(_req: Request, res: Response) {
     const userId: number = res.locals.user.id;
     const response = await getUserDataService(userId);
     res.status(200).send(response);
-  } catch (error) {
-    return res.sendStatus(500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
   }
 }
 export async function changePassword(req: Request, res: Response) {
@@ -35,9 +38,9 @@ export async function changePassword(req: Request, res: Response) {
     const newPassword: string = req.body.password;
     await changePasswordService({ userId, newPassword });
     res.status(200).send({ message: 'Password Changed Successfully' });
-
-  } catch (error) {
-    return res.sendStatus(500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
   }
 }
 export async function deleteAccount(_req: Request, res: Response) {
@@ -45,16 +48,18 @@ export async function deleteAccount(_req: Request, res: Response) {
     const userId: number = res.locals.user.user_id;
     await deleteAccountService(userId);
     res.status(200).send({ message: 'User Deleted Successfully' });
-  } catch (error) {
-    return res.sendStatus(500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
   }
 }
 export async function allUsers(req: Request, res: Response) {
   try {
     const response = await allUsersService(); 
     res.status(200).send(response);
-  } catch (error) {
-    return res.sendStatus(500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status).send({message: error.message});
   }
 }
 

@@ -12,7 +12,8 @@ export class CustomError extends Error {
 
 export function handleApplicationErrors(err: ApplicationError, _req: Request, res: Response) {
   console.error(err); 
-  res.status(err.status || httpStatus.INTERNAL_SERVER_ERROR).send({ 
+  
+  return res.status(err.status || httpStatus.INTERNAL_SERVER_ERROR).send({ 
     error: {
       message: err.message || 'An unknown error occurred'
     }
