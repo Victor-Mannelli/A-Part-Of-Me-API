@@ -22,6 +22,7 @@ model User {
   friendshipsAsFriend    Friendship[]    @relation("FriendshipsAsFriend")
   messages_sent          Message[]       @relation("MessageAuthor")
   messages_received      Message[]       @relation("MessageReceiver")
+  UserAnimeList          UserAnimeList[]
 
   @@map("users")
 }
@@ -177,3 +178,11 @@ model AnimeNextAiring {
 //     favourites: number,
 //   }
 // }
+
+model UserAnimeList {
+  animeList Int  @id @default(autoincrement())
+  user_id   Int
+  user      User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  anime_id  Int
+  // status Watching | Dropped | Finished | Re-Watching
+}
