@@ -1,4 +1,4 @@
-import joi from 'joi';
+import joi, { object } from 'joi';
 
 export const signInSchema = joi.object({
   login: joi.string().required(),
@@ -30,4 +30,17 @@ export const friendRequestSchema = joi.object({
   friend_request_id: joi.number().required(),
   requester_id: joi.number().required(),
   requested_id: joi.number().required()
+});
+export const userAnimeListSchema = joi.object({
+  animeId: joi.number().required(),
+  status: joi.string().valid('Watching', 'Dropped', 'Finished', 'Rewatching').required(),
+  score: joi.number().required(),
+  progress: joi.number().required(),
+  rewatches: joi.number().required(),
+  startDate: joi.date().required(),
+  finishDate: joi.valid(null, object),
+  favorite: joi.boolean().required()
+});
+export const animeIdSchema = joi.object({
+  animeId: joi.number().required()
 });

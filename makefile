@@ -19,6 +19,9 @@ dbsetup:
 	npx prisma generate
 	npx prisma migrate dev
 
+dbpull: 
+	npx prisma db pull
+
 seed:
 	npm run seed
 

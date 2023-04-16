@@ -4,7 +4,7 @@ import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 import { handleApplicationErrors } from './middlewares';
-import { authRouter, friendRouter, messageRouter, userRouter } from './routers';
+import { animeRouter, authRouter, friendRouter, messageRouter, userRouter } from './routers';
 
 const app = express();
 const serverHttp = http.createServer(app);
@@ -17,7 +17,8 @@ app
   .use(json())
   .use('/users', userRouter)
   .use('/messages', messageRouter)
-  .use('/friends',friendRouter)
+  .use('/friends', friendRouter)
+  .use('/anime', animeRouter)
   .use(authRouter)
   .use(handleApplicationErrors);
 

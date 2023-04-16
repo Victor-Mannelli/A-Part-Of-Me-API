@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,27 +10,37 @@ datasource db {
 model User {
   user_id                Int             @id @default(autoincrement())
   email                  String          @unique
-  username               String
   password               String
-  sessions               Session[]
-  sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
+  username               String
   receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
-  friendshipsAsUser      Friendship[]    @relation("FriendshipsAsUser")
+  sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
   friendshipsAsFriend    Friendship[]    @relation("FriendshipsAsFriend")
+  friendshipsAsUser      Friendship[]    @relation("FriendshipsAsUser")
   messages_sent          Message[]       @relation("MessageAuthor")
   messages_received      Message[]       @relation("MessageReceiver")
+  sessions               Session[]
   UserAnimeList          UserAnimeList[]
 
   @@map("users")
 }
 
+model Session {
+  session_id Int      @id @default(autoincrement())
+  user_id    Int
+  created_at DateTime @default(now())
+  token      String   @unique
+  user       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
 model FriendRequest {
   friend_request_id Int      @id @default(autoincrement())
   requester_id      Int
-  requester         User     @relation("SentFriendRequests", fields: [requester_id], references: [user_id])
   requested_id      Int
-  requested         User     @relation("ReceivedFriendRequests", fields: [requested_id], references: [user_id])
   created_at        DateTime @default(now())
+  requested         User     @relation("ReceivedFriendRequests", fields: [requested_id], references: [user_id])
+  requester         User     @relation("SentFriendRequests", fields: [requester_id], references: [user_id])
 
   @@map("friend_requests")
 }
@@ -41,148 +48,61 @@ model FriendRequest {
 model Friendship {
   friendship_id Int      @id @default(autoincrement())
   user_id       Int
-  user          User     @relation("FriendshipsAsUser", fields: [user_id], references: [user_id])
   friend_id     Int
-  friend        User     @relation("FriendshipsAsFriend", fields: [friend_id], references: [user_id])
   created_at    DateTime @default(now())
+  friend        User     @relation("FriendshipsAsFriend", fields: [friend_id], references: [user_id])
+  user          User     @relation("FriendshipsAsUser", fields: [user_id], references: [user_id])
 
   @@map("friendships")
-}
-
-model Session {
-  session_id Int      @id @default(autoincrement())
-  user       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  user_id    Int
-  created_at DateTime @default(now())
-  token      String   @unique
-
-  @@map("sessions")
 }
 
 model Message {
   message_id  Int      @id @default(autoincrement())
   message     String
   author_id   Int
-  author      User     @relation(name: "MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
   receiver_id Int
-  receiver    User     @relation(name: "MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
   created_at  DateTime @default(now())
+  author      User     @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
+  receiver    User     @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
 
   @@map("messages")
 }
 
 model Anime {
-  anime_id        Int               @id @default(autoincrement())
-  title           String
-  type            String
-  format          String
-  status          String
-  description     String
-  season          String
-  episodes        Int
-  duration        Int
-  chapters        Int
-  volumes         Int
-  source          String
-  updatedAt       Int
-  coverImage      String
-  bannerImage     String
-  genres          String[]
-  synonyms        String[]
-  averageScore    Int
-  popularity      Int
-  favourites      Int
-  isAdult         Boolean
-  AnimeStartDate  AnimeStartDate[]
-  AnimeEndDate    AnimeEndDate[]
-  AnimeTrailer    AnimeTrailer[]
-  AnimeTag        AnimeTag[]
-  AnimeNextAiring AnimeNextAiring[]
+  id                  Int             @id @default(autoincrement())
+  anime_id            Int             @unique
+  title               String?
+  status              String?
+  description         String?
+  start_date          Int?
+  end_date            Int?
+  episodes            Int?
+  chapters            Int?
+  volumes             Int?
+  cover_image         String?
+  banner_image        String?
+  genres              Json?
+  average_score       Int?
+  next_airing_episode Json?
+  UserAnimeList       UserAnimeList[]
 
   @@map("animes")
 }
 
-model AnimeStartDate {
-  id       Int   @id @default(autoincrement())
-  anime_id Int
-  anime    Anime @relation(fields: [anime_id], references: [anime_id], onDelete: Cascade)
-  year     Int
-  month    Int
-  day      Int
-
-  @@map("startdate")
-}
-
-model AnimeEndDate {
-  id       Int   @id @default(autoincrement())
-  anime_id Int
-  anime    Anime @relation(fields: [anime_id], references: [anime_id], onDelete: Cascade)
-  year     Int
-  month    Int
-  day      Int
-
-  @@map("enddate")
-}
-
-model AnimeTrailer {
-  trailer_id Int    @id @default(autoincrement())
-  anime_id   Int
-  anime      Anime  @relation(fields: [anime_id], references: [anime_id], onDelete: Cascade)
-  site       String
-  thumbnail  String
-
-  @@map("trailer")
-}
-
-model AnimeTag {
-  tag_id      Int     @id @default(autoincrement())
-  anime_id    Int
-  anime       Anime   @relation(fields: [anime_id], references: [anime_id], onDelete: Cascade)
-  name        String
-  description String
-  category    String
-  isAdult     Boolean
-
-  @@map("tags")
-}
-
-model AnimeNextAiring {
-  next_airing_id  Int   @id @default(autoincrement())
-  anime_id        Int
-  anime           Anime @relation(fields: [anime_id], references: [anime_id], onDelete: Cascade)
-  timeUntilAiring Int
-  episode         Int
-
-  @@map("airing")
-}
-
-// model AnimeCharacters {
-//  nodes: {
-//     id: number,
-//     name: {
-//       full: string,
-//     },
-//     image: {
-//       large: string,
-//       medium: string,
-//     },
-//     gender: string,
-//     description: string,
-//     dateOfBirth: {
-//       year: number,
-//       month: number,
-//       day: number,
-//     },
-//     age: number,
-//     bloodType: string,
-//     favourites: number,
-//   }
-// }
-
 model UserAnimeList {
-  animeList Int  @id @default(autoincrement())
-  user_id   Int
-  user      User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  anime_id  Int
-  // status Watching | Dropped | Finished | Re-Watching
+  id          Int       @id @default(autoincrement())
+  user_id     Int      
+  user        User      @relation(fields: [user_id], references: [user_id])
+  anime_id    Int      
+  anime       Anime     @relation(fields: [anime_id], references: [anime_id])
+  status      String?
+  score       Int?
+  progress    Int?
+  rewatches   Int?
+  start_date  Int?
+  finish_date Int?
+  favorite    Boolean?
+
+  @@unique([user_id, anime_id])
+  @@map("user_anime_list")
 }
