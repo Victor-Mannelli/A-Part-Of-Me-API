@@ -1,6 +1,6 @@
 // import { findManyUserAnimeList, populateAnimeTable, postAnimeStatusForUser } from '../repositories';
 import { findManyUserAnimeList, populateAnimeTable, postAnimeStatusForUser } from '../repositories';
-import { UserAnimeStatus } from '../utils/types';
+import { AnimeData, UserAnimeStatus } from '../utils/types';
 
 export async function postAnimeStatusService({
   userId,
@@ -29,6 +29,6 @@ export async function getUserAnimeListService(userId: number) {
   return await findManyUserAnimeList(userId);
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function populateAnimeTableService(animeData: any) {
-  return await populateAnimeTable(animeData);
+export async function populateAnimeTableService(animeData: AnimeData) {
+  await populateAnimeTable(animeData);
 }

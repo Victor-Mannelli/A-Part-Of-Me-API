@@ -1,21 +1,21 @@
 import { PrismaClient } from '@prisma/client';
-import { UserAnimeStatus } from '../utils/types';
+import { AnimeData, UserAnimeStatus } from '../utils/types';
 
 const prisma = new PrismaClient();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function populateAnimeTable(animeData: any) {
+export async function populateAnimeTable(animeData: AnimeData) {
   await prisma.anime.upsert({
     where: {
       anime_id: animeData.id
     },
     update: {
       anime_id: animeData.id,
-      title: animeData.title,
+      title: animeData.title.romaji,
       status: animeData.status,
       description: animeData.description,
-      start_date: animeData.startDate,
-      end_date: animeData.endDate,
+      start_date: Math.round(new Date(animeData.startDate.year, animeData.startDate.month - 1, animeData.startDate.day).getTime() / 1000),
+      end_date: Math.round(new Date(animeData.endDate.year, animeData.endDate.month - 1, animeData.endDate.day).getTime() / 1000),
       episodes: animeData.episodes,
       chapters: animeData.chapters,
       volumes: animeData.volumes,
@@ -27,11 +27,11 @@ export async function populateAnimeTable(animeData: any) {
     },
     create: {
       anime_id: animeData.id,
-      title: animeData.title,
+      title: animeData.title.romaji,
       status: animeData.status,
       description: animeData.description,
-      start_date: animeData.startDate,
-      end_date: animeData.endDate,
+      start_date: Math.round(new Date(animeData.startDate.year, animeData.startDate.month - 1, animeData.startDate.day).getTime() / 1000),
+      end_date: Math.round(new Date(animeData.endDate.year, animeData.endDate.month - 1, animeData.endDate.day).getTime() / 1000),
       episodes: animeData.episodes,
       chapters: animeData.chapters,
       volumes: animeData.volumes,

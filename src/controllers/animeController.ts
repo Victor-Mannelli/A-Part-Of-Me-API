@@ -100,8 +100,8 @@ export async function populateAnimeTable(req: Request, res: Response) {
       }
     });
     data = data.data.Media;
-    const response = await populateAnimeTableService(data);
-    return res.status(201).send(response);
+    await populateAnimeTableService(data);
+    return res.sendStatus(200);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return res.status(error.status || 500).send({ message: error.message });

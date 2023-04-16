@@ -50,9 +50,9 @@ export type AnimeData = {
     english: string,
     native: string,
   },
+  status: string
   type: string,
   format: string,
-  status: string
   description: string,
   startDate: {
     year: number,
@@ -85,6 +85,7 @@ export type AnimeData = {
   genres: string[],
   synonyms: string[] | string,
   meanScore: number,
+  averageScore: number,
   popularity: number,
   favourites: number,
   tags: {
