@@ -12,7 +12,9 @@
     "ws": "ts-node --esm ./src/websocket.ts",
     "prepare": "husky install",
     "pre-commit": "eslint . --fix",
-    "seed": "npx prisma db seed"
+    "seed": "npx prisma db seed",
+    "build": "tsc",
+    "start": "node ./dist/src"
   },
   "repository": {
     "type": "git",
