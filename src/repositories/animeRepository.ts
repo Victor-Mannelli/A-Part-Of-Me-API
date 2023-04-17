@@ -96,3 +96,17 @@ export async function findManyUserAnimeList(userId: number) {
     }
   });
 }
+
+export async function putAnimeProgress(userId: number, animeId: number, progress: number) {
+  await prisma.userAnimeList.update({
+    where: {
+      user_id_anime_id: {
+        user_id: userId,
+        anime_id: animeId
+      }
+    },
+    data: {
+      progress
+    }
+  });
+}

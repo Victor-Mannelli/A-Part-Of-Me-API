@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getUserAnimeListService, populateAnimeTableService, postAnimeStatusService } from '../services';
+import { getUserAnimeListService, populateAnimeTableService, postAnimeStatusService, updateAnimeProgressService } from '../services';
 import axios from 'axios';
 
 export async function populateAnimeTable(req: Request, res: Response) {
@@ -108,7 +108,6 @@ export async function populateAnimeTable(req: Request, res: Response) {
   }
 }
 
-
 export async function addToUserAnimeList(req: Request, res: Response) {
   try {
     await postAnimeStatusService({
@@ -133,6 +132,16 @@ export async function getUserAnimeList(_req: Request, res: Response) {
   try {
     const response = await getUserAnimeListService(res.locals.user.user_id);
     return res.status(200).send(response);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    return res.status(error.status || 500).send({ message: error.message });
+  }
+}
+
+export async function updateAnimeProgress(req: Request, res: Response) {
+  try {
+    await updateAnimeProgressService(res.locals.user.user_id, req.body.animeId, req.body.progress);
+    return res.sendStatus(200);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return res.status(error.status || 500).send({ message: error.message });

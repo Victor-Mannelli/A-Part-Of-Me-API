@@ -34,13 +34,18 @@ export const friendRequestSchema = joi.object({
 export const userAnimeListSchema = joi.object({
   animeId: joi.number().required(),
   status: joi.string().valid('Watching', 'Dropped', 'Finished', 'Rewatching').required(),
-  score: joi.number().required(),
+  score: joi.number().max(10).required(),
   progress: joi.number().required(),
   rewatches: joi.number().required(),
-  startDate: joi.date().required(),
+  startDate: joi.date(),
   finishDate: joi.valid(null, object),
   favorite: joi.boolean().required()
 });
 export const animeIdSchema = joi.object({
   animeId: joi.number().required()
+});
+
+export const updateProgressSchema = joi.object({
+  animeId: joi.number().required(),
+  progress: joi.number().required()
 });

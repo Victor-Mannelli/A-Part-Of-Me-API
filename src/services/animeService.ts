@@ -1,5 +1,5 @@
 // import { findManyUserAnimeList, populateAnimeTable, postAnimeStatusForUser } from '../repositories';
-import { findManyUserAnimeList, populateAnimeTable, postAnimeStatusForUser } from '../repositories';
+import { findManyUserAnimeList, populateAnimeTable, postAnimeStatusForUser, putAnimeProgress } from '../repositories';
 import { AnimeData, UserAnimeStatus } from '../utils/types';
 
 export async function postAnimeStatusService({
@@ -31,4 +31,8 @@ export async function getUserAnimeListService(userId: number) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function populateAnimeTableService(animeData: AnimeData) {
   await populateAnimeTable(animeData);
+}
+
+export async function updateAnimeProgressService(userId: number, animeId: number, progress: number){
+  await putAnimeProgress(userId, animeId, progress);
 }
