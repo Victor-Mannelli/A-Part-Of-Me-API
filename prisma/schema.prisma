@@ -39,8 +39,8 @@ model FriendRequest {
   requester_id      Int
   requested_id      Int
   created_at        DateTime @default(now())
-  requested         User     @relation("ReceivedFriendRequests", fields: [requested_id], references: [user_id])
-  requester         User     @relation("SentFriendRequests", fields: [requester_id], references: [user_id])
+  requested         User     @relation("ReceivedFriendRequests", fields: [requested_id], references: [user_id], onDelete: Cascade)
+  requester         User     @relation("SentFriendRequests", fields: [requester_id], references: [user_id], onDelete: Cascade)
 
   @@map("friend_requests")
 }
@@ -50,8 +50,8 @@ model Friendship {
   user_id       Int
   friend_id     Int
   created_at    DateTime @default(now())
-  friend        User     @relation("FriendshipsAsFriend", fields: [friend_id], references: [user_id])
-  user          User     @relation("FriendshipsAsUser", fields: [user_id], references: [user_id])
+  friend        User     @relation("FriendshipsAsFriend", fields: [friend_id], references: [user_id], onDelete: Cascade)
+  user          User     @relation("FriendshipsAsUser", fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@map("friendships")
 }
@@ -92,7 +92,7 @@ model Anime {
 model UserAnimeList {
   id          Int       @id @default(autoincrement())
   user_id     Int      
-  user        User      @relation(fields: [user_id], references: [user_id])
+  user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   anime_id    Int      
   anime       Anime     @relation(fields: [anime_id], references: [anime_id])
   status      String?

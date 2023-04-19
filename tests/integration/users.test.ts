@@ -1,12 +1,16 @@
-import { faker } from '@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
+import { faker } from '@faker-js/faker';
 import { cleanDb } from '../helpers';
-import { app, init } from 'server';
+import { connectDb, disconnectDB } from 'config';
+import { app } from 'app';
 
 beforeAll(async () => {
-  await init();
+  connectDb();
   await cleanDb();
+});
+afterAll(async () => {
+  await disconnectDB();
 });
 
 const server = supertest(app);

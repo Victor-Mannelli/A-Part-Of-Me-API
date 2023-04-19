@@ -1,4 +1,4 @@
-import { io } from './server.js';
+import { io } from './app.js';
 // import { newMessage } from './services/messageServices/messageServices.js';
 
 io.on('connection', (socket: any) => {

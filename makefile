@@ -15,6 +15,9 @@ build:
 test:
 	npm run test
 
+dbtestsetup: 
+	npm run test:migrate
+
 dbsetup:
 	npx prisma generate
 	npx prisma migrate dev

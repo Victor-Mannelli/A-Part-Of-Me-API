@@ -10,13 +10,14 @@
     "test": "NODE_ENV=test jest --passWithNoTests --runInBand",
     "test:coverage": "NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom='./src/**'",
     "test:load-envs": "dotenv -e .env.test",
-    "dev": "nodemon ./src/index.ts",
+    "test:migrate": "NODE_ENV=test npx prisma migrate dev",
+    "dev": "NODE_ENV=development nodemon ./src/server.ts",
     "ws": "ts-node --esm ./src/websocket.ts",
     "prepare": "husky install",
     "pre-commit": "eslint . --fix",
     "seed": "npx prisma db seed",
     "build": "tsc",
-    "start": "node ./dist/src"
+    "start": "node ./dist/src/server.ts"
   },
   "repository": {
     "type": "git",

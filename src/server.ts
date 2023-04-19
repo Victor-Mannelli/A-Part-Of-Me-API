@@ -1,25 +1,13 @@
-import './setup';
-import express, { json } from 'express';
-import cors from 'cors';
-import http from 'http';
-import { Server } from 'socket.io';
-import { handleApplicationErrors } from './middlewares';
-import { animeRouter, authRouter, friendRouter, messageRouter, userRouter } from './routers';
+import 'dotenv/config';
+import { app, init } from './app';
+// import './websocket.ts';
+// import { serverHttp } from './server.ts';
 
-const app = express();
-const serverHttp = http.createServer(app);
-const io = new Server(serverHttp, {
-  cors: { origin: 'http://localhost:3000' },
+const port = process.env.PORT;
+
+// serverHttp.listen(port, () =>
+//   console.log('Server up and running on port', port)
+// );
+init().then(() => {
+  app.listen(port, () => console.log('Server up and running on port', port));
 });
-
-app
-  .use(cors())
-  .use(json())
-  .use('/users', userRouter)
-  .use('/messages', messageRouter)
-  .use('/friends', friendRouter)
-  .use('/anime', animeRouter)
-  .use(authRouter)
-  .use(handleApplicationErrors);
-
-export { serverHttp, io, app };
