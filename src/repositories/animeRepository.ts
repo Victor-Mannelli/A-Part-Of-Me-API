@@ -1,5 +1,7 @@
-import { prisma } from '../config/database';
 import { AnimeData, UserAnimeStatus } from '../utils/types';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function populateAnimeTable(animeData: AnimeData) {

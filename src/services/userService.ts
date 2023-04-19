@@ -1,9 +1,8 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { v4 as uuid } from 'uuid';
-import { changePassword, checkEmail, checkUsername, createNewUser, deleteAccount, deleteUserSessions, findFirstUserData, findUserFriends, getUsersList, logingUser } from '../repositories';
+import { changePassword, checkEmail, checkUsername, createNewUser, deleteAccount, deleteUserSessions, findFirstUserData, getUsersList, logingUser } from '../repositories';
 import { ChangePasswordBody, SignUpBody } from '../utils/types';
-
 
 export async function createNewUserService(params: SignUpBody) {
   const result = await checkEmail(params.email);

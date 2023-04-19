@@ -11,7 +11,7 @@ export async function getMessagesController(req: Request, res: Response) {
     return res.status(httpStatus.OK).send(messages);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 
@@ -25,6 +25,6 @@ export async function postMessageController(req: Request, res: Response) {
     return res.status(httpStatus.CREATED).send(response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({ message: error.message });
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }

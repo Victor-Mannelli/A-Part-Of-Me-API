@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { acceptFriendRequestService, getFriendRequestsService, getUserFriendListService, sendFriendRequestsService } from '../services';
+import httpStatus from 'http-status';
 
 export async function getFriendList(_req: Request, res: Response) {
   try {
@@ -8,7 +9,7 @@ export async function getFriendList(_req: Request, res: Response) {
     res.status(200).send(response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 
@@ -19,7 +20,7 @@ export async function getFriendRequests(_req: Request, res: Response) {
     return res.status(200).send(friendRequests);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 
@@ -30,7 +31,7 @@ export async function sendFriendRequest(req: Request, res: Response) {
     return res.status(200).send(response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 
@@ -44,6 +45,6 @@ export async function acceptFriendRequest(req: Request, res: Response) {
     return res.sendStatus(200);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }

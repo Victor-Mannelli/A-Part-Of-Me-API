@@ -1,5 +1,7 @@
 import * as types from '../utils/types';
-import { prisma } from '../config/database';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function checkEmail(email: string) {
   return await prisma.user.findFirst({

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { allUsersService, changePasswordService, createNewUserService, deleteAccountService, getUserDataService, getUserFriendListService, loginService } from '../services';
+import { allUsersService, changePasswordService, createNewUserService, deleteAccountService, getUserDataService, loginService } from '../services';
 import * as types from '../utils/types/index';
+import httpStatus from 'http-status';
 
 export async function singUp(req: Request, res: Response) {
   try {
@@ -9,7 +10,7 @@ export async function singUp(req: Request, res: Response) {
     res.status(201).send({ message: 'User created successfully!' });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 export async function singIn(req: Request, res: Response) {
@@ -19,7 +20,7 @@ export async function singIn(req: Request, res: Response) {
     res.status(200).send(response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 export async function userData(_req: Request, res: Response) {
@@ -29,7 +30,7 @@ export async function userData(_req: Request, res: Response) {
     res.status(200).send(response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 export async function changePassword(req: Request, res: Response) {
@@ -40,7 +41,7 @@ export async function changePassword(req: Request, res: Response) {
     res.status(200).send({ message: 'Password Changed Successfully' });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 export async function deleteAccount(_req: Request, res: Response) {
@@ -50,16 +51,15 @@ export async function deleteAccount(_req: Request, res: Response) {
     res.status(200).send({ message: 'User Deleted Successfully' });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
-export async function allUsers(req: Request, res: Response) {
+export async function allUsers(_req: Request, res: Response) {
   try {
     const response = await allUsersService(); 
     res.status(200).send(response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status).send({message: error.message});
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
-

@@ -1,4 +1,6 @@
-import { prisma } from '../config/database';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function findUserFriends(userId: number) {
   return await prisma.user.findFirst({

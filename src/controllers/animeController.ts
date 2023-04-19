@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getUserAnimeListService, populateAnimeTableService, postAnimeStatusService, updateAnimeProgressService } from '../services';
 import axios from 'axios';
+import httpStatus from 'http-status';
 
 export async function populateAnimeTable(req: Request, res: Response) {
   try {
@@ -104,7 +105,7 @@ export async function populateAnimeTable(req: Request, res: Response) {
     return res.sendStatus(200);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status || 500).send({ message: error.message });
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 
@@ -124,7 +125,7 @@ export async function addToUserAnimeList(req: Request, res: Response) {
     return res.status(201).send({ message: 'Anime added successfully' });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status || 500).send({ message: error.message });
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 
@@ -134,7 +135,7 @@ export async function getUserAnimeList(_req: Request, res: Response) {
     return res.status(200).send(response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status || 500).send({ message: error.message });
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
 
@@ -144,6 +145,6 @@ export async function updateAnimeProgress(req: Request, res: Response) {
     return res.sendStatus(200);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(error.status || 500).send({ message: error.message });
+    return res.status(error.status || httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
   }
 }
