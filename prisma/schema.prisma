@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id                Int             @id @default(autoincrement())
+  email                  String          @unique
+  password               String
+  username               String
+  receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
+  sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
+  friendshipsAsFriend    Friendship[]    @relation("FriendshipsAsFriend")
+  friendshipsAsUser      Friendship[]    @relation("FriendshipsAsUser")
+  messages_sent          Message[]       @relation("MessageAuthor")
+  messages_received      Message[]       @relation("MessageReceiver")
+  sessions               Session[]
+  UserAnimeList          UserAnimeList[]
+
+  @@map("users")
+}
+
+model Session {
+  session_id Int      @id @default(autoincrement())
+  user_id    Int
+  created_at DateTime @default(now())
+  token      String   @unique
+  user       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model FriendRequest {
+  friend_request_id Int      @id @default(autoincrement())
+  requester_id      Int
+  requested_id      Int
+  created_at        DateTime @default(now())
+  requested         User     @relation("ReceivedFriendRequests", fields: [requested_id], references: [user_id], onDelete: Cascade)
+  requester         User     @relation("SentFriendRequests", fields: [requester_id], references: [user_id], onDelete: Cascade)
+
+  @@map("friend_requests")
+}
+
+model Friendship {
+  friendship_id Int      @id @default(autoincrement())
+  user_id       Int
+  friend_id     Int
+  created_at    DateTime @default(now())
+  friend        User     @relation("FriendshipsAsFriend", fields: [friend_id], references: [user_id], onDelete: Cascade)
+  user          User     @relation("FriendshipsAsUser", fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@map("friendships")
+}
+
+model Message {
+  message_id  Int      @id @default(autoincrement())
+  message     String
+  author_id   Int
+  receiver_id Int
+  created_at  DateTime @default(now())
+  author      User     @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
+  receiver    User     @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Anime {
+  id                  Int             @id @default(autoincrement())
+  anime_id            Int             @unique
+  title               String?
+  status              String?
+  description         String?
+  start_date          Int?
+  end_date            Int?
+  episodes            Int?
+  chapters            Int?
+  volumes             Int?
+  cover_image         String?
+  banner_image        String?
+  genres              Json?
+  average_score       Int?
+  next_airing_episode Json?
+  UserAnimeList       UserAnimeList[]
+
+  @@map("animes")
+}
+
+model UserAnimeList {
+  id          Int       @id @default(autoincrement())
+  user_id     Int      
+  user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  anime_id    Int      
+  anime       Anime     @relation(fields: [anime_id], references: [anime_id])
+  status      String?
+  score       Int?
+  progress    Int?
+  rewatches   Int?
+  start_date  Int?
+  finish_date Int?
+  favorite    Boolean?
+
+  @@unique([user_id, anime_id])
+  @@map("user_anime_list")
+}
