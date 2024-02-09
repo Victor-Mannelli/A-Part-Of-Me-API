@@ -51,7 +51,8 @@ export class UsersRepository {
       },
     });
   }
-  async findFirstUserData(userId: number) {
+
+  async findUser(userId: number) {
     return await this.prisma.user.findFirst({
       where: {
         user_id: userId,
@@ -62,7 +63,14 @@ export class UsersRepository {
       },
     });
   }
-
+  async getUsersList() {
+    return await this.prisma.user.findMany({
+      select: {
+        user_id: true,
+        username: true,
+      },
+    });
+  }
   async deleteUserSessions(userId: number) {
     await this.prisma.session.deleteMany({
       where: {
@@ -91,15 +99,6 @@ export class UsersRepository {
     await this.prisma.user.delete({
       where: {
         user_id: userId,
-      },
-    });
-  }
-
-  async getUsersList() {
-    return await this.prisma.user.findMany({
-      select: {
-        user_id: true,
-        username: true,
       },
     });
   }

@@ -10,3 +10,15 @@ export class CreateUserDto {
   @ApiProperty()
   confirmPassword: string;
 }
+export class LoginDto {
+  @ApiProperty()
+  login: string;
+  @ApiProperty()
+  password: string;
+}
+export class UpdateUserDto {
+  @ApiProperty()
+  userId: number;
+  @ApiProperty()
+  newPassword: string;
+}
