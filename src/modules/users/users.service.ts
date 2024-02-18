@@ -26,11 +26,11 @@ export class UsersService {
     });
   }
   async login(loginDto: LoginDto) {
+
     const user = loginDto.login.includes('@')
       ? await this.usersRepository.checkEmail(loginDto.login)
       : await this.usersRepository.checkUsername(loginDto.login);
-
-    if (Object.keys(user).length === 0) {
+    if (!user) {
       throw new HttpException({
         status: HttpStatus.NOT_FOUND,
         message: 'User doesn\'t exist!',
