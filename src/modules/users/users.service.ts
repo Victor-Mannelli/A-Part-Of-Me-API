@@ -6,16 +6,17 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(readonly usersRepository: UsersRepository) { }
+  constructor(readonly usersRepository: UsersRepository) {}
 
   async create(createUserDto: CreateUserDto) {
     const result = await this.usersRepository.checkEmail(createUserDto.email);
-    if (Object.keys(result).length !== 0) {
-      throw new HttpException({
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'User already exists!',
-      },
-        HttpStatus.UNAUTHORIZED
+    if (result) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          message: 'User already exists!',
+        },
+        HttpStatus.UNAUTHORIZED,
       );
     }
     const hashedPassword: string = bcrypt.hashSync(createUserDto.password, 10);
@@ -26,24 +27,25 @@ export class UsersService {
     });
   }
   async login(loginDto: LoginDto) {
-
     const user = loginDto.login.includes('@')
       ? await this.usersRepository.checkEmail(loginDto.login)
       : await this.usersRepository.checkUsername(loginDto.login);
     if (!user) {
-      throw new HttpException({
-        status: HttpStatus.NOT_FOUND,
-        message: 'User doesn\'t exist!',
-      },
-        HttpStatus.NOT_FOUND
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: "User doesn't exist!",
+        },
+        HttpStatus.NOT_FOUND,
       );
     }
     if (!bcrypt.compareSync(loginDto.password, user.password)) {
-      throw new HttpException({
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'Wrong password!',
-      },
-        HttpStatus.UNAUTHORIZED
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          message: 'Wrong password!',
+        },
+        HttpStatus.UNAUTHORIZED,
       );
     }
     const userId: number = user.user_id;
@@ -61,7 +63,7 @@ export class UsersService {
     const newHashedPassword = bcrypt.hashSync(updateUserDto.newPassword, 10);
     return await this.usersRepository.changePassword({
       userId: updateUserDto.userId,
-      newHashedPassword
+      newHashedPassword,
     });
   }
   async remove(id: number) {

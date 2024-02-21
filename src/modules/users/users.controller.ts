@@ -1,4 +1,15 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, Param, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Get,
+  Param,
+  Patch,
+  Delete,
+  Response,
+} from '@nestjs/common';
 import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
 import { UsersService } from './users.service';
 
@@ -11,19 +22,19 @@ export class UsersController {
   registration(@Body() registrationDto: CreateUserDto) {
     return this.usersService.create(registrationDto);
   }
-  @Post('/login') 
+  @Post('/login')
   @HttpCode(HttpStatus.ACCEPTED)
   login(@Body() loginDto: LoginDto) {
-    return this.usersService.login(loginDto)
+    return this.usersService.login(loginDto);
   }
 
-  @Get()
+  @Get('/all')
   findAll() {
     return this.usersService.findAll();
   }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get()
+  findOne(@Response() res: any) {
+    return this.usersService.findOne(res.locals.user_id);
   }
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
