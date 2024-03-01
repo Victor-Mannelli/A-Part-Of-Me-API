@@ -5,21 +5,11 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AnimesService {
   constructor(readonly animesRepository: AnimesRepository) {}
-  // create(createAnimeDto: CreateAnimeDto) {
-  //   return 'This action adds a new anime';
-  // }
-  // findAll() {
-  //   return `This action returns all animes`;
-  // }
-  // findOne(id: number) {
-  //   return `This action returns a #${id} anime`;
-  // }
-  // update(id: number, updateAnimeDto: UpdateAnimeDto) {
-  //   return `This action updates a #${id} anime`;
-  // }
-  // remove(id: number) {
-  //   return `This action removes a #${id} anime`;
-  // }
+
+  async getUserAnimeList(userId: number) {
+    return await this.animesRepository.findUserAnimeList(userId);
+  }
+
   async postAnimeStatus({
     userId,
     animeId,
@@ -43,12 +33,12 @@ export class AnimesService {
       favorite,
     });
   }
-  async getUserAnimeList(userId: number) {
-    return await this.animesRepository.findManyUserAnimeList(userId);
-  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async populateAnimeTable(animeData: AnimeData) {
-    await this.animesRepository.populateAnimeTable(animeData);
+    const response = await this.animesRepository.findOneAnime(animeData.id);
+    if (response) return;
+    return await this.animesRepository.populateAnimeTable(animeData);
   }
 
   async updateAnimeProgress(userId: number, animeId: number, progress: number) {

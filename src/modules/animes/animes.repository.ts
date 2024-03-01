@@ -10,6 +10,25 @@ export class AnimesRepository {
     this.prisma = prisma;
   }
 
+  async findOneAnime(animeId: number) {
+    return await prisma.anime.findFirst({
+      where: {
+        anime_id: animeId,
+      },
+    });
+  }
+
+  async findUserAnimeList(userId: number) {
+    return await prisma.userAnimeList.findMany({
+      where: {
+        user_id: userId,
+      },
+      include: {
+        anime: true,
+      },
+    });
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async populateAnimeTable(animeData: types.AnimeData) {
     await prisma.anime.upsert({
@@ -112,17 +131,6 @@ export class AnimesRepository {
         start_date: startDate,
         finish_date: finishDate,
         favorite,
-      },
-    });
-  }
-
-  async findManyUserAnimeList(userId: number) {
-    return await prisma.userAnimeList.findMany({
-      where: {
-        user_id: userId,
-      },
-      include: {
-        anime: true,
       },
     });
   }

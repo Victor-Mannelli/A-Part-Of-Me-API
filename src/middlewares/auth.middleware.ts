@@ -7,7 +7,7 @@ import { PrismaClient } from '@prisma/client';
 // import * as jwt from 'jsonwebtoken';
 import { prisma } from 'src/utils';
 @Injectable()
-export class UserMiddleware implements NestMiddleware {
+export class AuthMiddleware implements NestMiddleware {
   prisma: PrismaClient;
   constructor() {
     this.prisma = prisma;
