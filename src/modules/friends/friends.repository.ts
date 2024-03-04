@@ -12,7 +12,7 @@ export class FriendsRepository {
   async findUserFriends(userId: number) {
     return await prisma.user.findFirst({
       where: {
-        user_id: userId
+        user_id: userId,
       },
       select: {
         friendshipsAsUser: {
@@ -21,10 +21,10 @@ export class FriendsRepository {
             friend: {
               select: {
                 user_id: true,
-                username: true
-              }
-            }
-          }
+                username: true,
+              },
+            },
+          },
         },
         friendshipsAsFriend: {
           select: {
@@ -32,51 +32,47 @@ export class FriendsRepository {
               select: {
                 user_id: true,
                 username: true,
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     });
   }
-  
+
   async getFriendRequests(userId: number) {
     return await prisma.friendRequest.findMany({
       where: {
-        OR: [
-          { requested_id: userId },
-          { requester_id: userId },
-        ]
+        OR: [{ requested_id: userId }, { requester_id: userId }],
       },
       select: {
         friend_request_id: true,
         requester_id: true,
-        requested_id: true
+        requested_id: true,
       },
     });
   }
-  
+
   async postFriendRequest(userId: number, friendId: number) {
     return await prisma.friendRequest.create({
       data: {
         requester_id: userId,
-        requested_id: friendId
-      }
+        requested_id: friendId,
+      },
     });
   }
-  
+
   async acceptFriendRequest(acceptFriendRequestDto: AcceptFriendRequestDto) {
     await prisma.friendship.create({
       data: {
         user_id: acceptFriendRequestDto.requesterId,
-        friend_id: acceptFriendRequestDto.requestedId
-      }
+        friend_id: acceptFriendRequestDto.requestedId,
+      },
     });
     await prisma.friendRequest.delete({
       where: {
-        friend_request_id: acceptFriendRequestDto.friendRequestId
-      }
+        friend_request_id: acceptFriendRequestDto.friendRequestId,
+      },
     });
   }
-  
 }

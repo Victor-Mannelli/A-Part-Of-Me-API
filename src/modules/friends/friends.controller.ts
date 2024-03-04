@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Response } from '@nestjs/common';
 import { AcceptFriendRequestDto } from './friends.dto';
 import { FriendsService } from './friends.service';
 
 @Controller('friends')
 export class FriendsController {
-  constructor(private readonly friendsService: FriendsService) { }
+  constructor(private readonly friendsService: FriendsService) {}
 
   // @Post()
   // create(@Body() createFriendDto: CreateFriendDto) {
@@ -27,29 +27,41 @@ export class FriendsController {
   //   return this.friendsService.remove(+id);
   // }
 
-  @Get('/friendList/:id')
-  async getFriendList(@Param('id') id: string) {
-    return await this.friendsService.getFriendList(Number(id));
+  @Get('/friendList')
+  async getFriendList(@Response() res) {
+    const response = await this.friendsService.getFriendList(
+      res.locals.user_id,
+    );
+    res.status(200).send(response);
   }
   // @Delete('/friend:id')
-
-
   // @Delete('/friendRequest/:id')
-
-
-  @Get('/friendRequest/:id')
-  async getFriendRequests(@Param('id') id: string) {
-    return await this.friendsService.getFriendRequests(Number(id));
+  @Get('/friendRequests')
+  async getFriendRequests(@Response() res) {
+    const response = await this.friendsService.getFriendRequests(
+      res.locals.user_id,
+    );
+    res.status(200).send(response);
   }
 
-  @Post('/friendRequest/:id')
-  async sendFriendRequest(@Param('id') id: string, @Body() friendId: number) {
-    return await this.friendsService.sendFriendRequests({ userId: Number(id), friendId });
+  @Post('/friendRequest')
+  async sendFriendRequest(
+    @Response() res,
+    @Body() { friend_id }: { friend_id: number },
+  ) {
+    const response = await this.friendsService.sendFriendRequests({
+      userId: res.locals.user_id,
+      friendId: friend_id,
+    });
+    res.status(200).send(response);
   }
 
   @Post('/friendRequest/accept')
-  async acceptFriendRequest(@Body() acceptFriendRequestDto: AcceptFriendRequestDto) {
-    return await this.friendsService.acceptFriendRequest(acceptFriendRequestDto);
+  async acceptFriendRequest(
+    @Body() acceptFriendRequestDto: AcceptFriendRequestDto,
+  ) {
+    return await this.friendsService.acceptFriendRequest(
+      acceptFriendRequestDto,
+    );
   }
-
 }
