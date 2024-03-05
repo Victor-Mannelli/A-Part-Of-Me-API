@@ -29,20 +29,30 @@ export class FriendsService {
   async sendFriendRequests({ userId, friendId }) {
     const userAlreadyFriends = await this.friendsRepository.findUserFriends(userId);
     if (userAlreadyFriends) {
-      userAlreadyFriends.friendshipsAsUser.forEach(user => {
-        if (user.friend.user_id === friendId) throw ({ status: 401, message: 'user already exists in friend list' });
+      userAlreadyFriends.friendshipsAsUser.forEach((user) => {
+        if (user.friend.user_id === friendId)
+          throw { status: 401, message: 'user already exists in friend list' };
       });
-      userAlreadyFriends.friendshipsAsFriend.forEach(friend => {
-        if (friend.user.user_id === friendId) throw ({ status: 401, message: 'user already exists in friend list' });
+      userAlreadyFriends.friendshipsAsFriend.forEach((friend) => {
+        if (friend.user.user_id === friendId)
+          throw { status: 401, message: 'user already exists in friend list' };
       });
     }
     return await this.friendsRepository.postFriendRequest(userId, friendId);
   }
-  async acceptFriendRequest({ friendRequestId, requesterId, requestedId }: {
-    friendRequestId: number,
-    requesterId: number,
-    requestedId: number
+  async acceptFriendRequest({
+    friendRequestId,
+    requesterId,
+    requestedId,
+  }: {
+    friendRequestId: number;
+    requesterId: number;
+    requestedId: number;
   }) {
-    await this.friendsRepository.acceptFriendRequest({ friendRequestId, requesterId, requestedId });
+    await this.friendsRepository.acceptFriendRequest({
+      friendRequestId,
+      requesterId,
+      requestedId,
+    });
   }
 }

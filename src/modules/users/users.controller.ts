@@ -6,6 +6,16 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @Get()
+  async findOne(@Response() res: any) {
+    const response = await this.usersService.findOne(res.locals.user_id);
+    res.status(200).send(response);
+  }
+  @Get('/all')
+  async findAll() {
+    return await this.usersService.findAll();
+  }
+
   @Post('/register')
   @HttpCode(HttpStatus.CREATED)
   async registration(@Body() registrationDto: CreateUserDto) {
@@ -17,15 +27,6 @@ export class UsersController {
     return await this.usersService.login(loginDto);
   }
 
-  @Get('/all')
-  async findAll() {
-    return await this.usersService.findAll();
-  }
-  @Get()
-  async findOne(@Response() res: any) {
-    const response = await this.usersService.findOne(res.locals.user_id);
-    res.status(200).send(response);
-  }
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.update(updateUserDto);
