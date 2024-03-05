@@ -1,8 +1,8 @@
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { MessagesModule } from './modules/messages/messages.module';
 import { FriendsModule } from './modules/friends/friends.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { AnimesModule } from './modules/animes/animes.module';
-import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -14,8 +14,10 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .exclude('users/register')
-      .exclude('users/login')
+      .exclude(
+        { path: 'users/register', method: RequestMethod.ALL },
+        { path: 'users/login', method: RequestMethod.ALL }
+      )
       .forRoutes('*');
   }
 }
