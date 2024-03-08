@@ -42,6 +42,6 @@ export class AnimesService {
   }
 
   async updateAnimeProgress(userId: number, animeId: number, progress: number) {
-    await this.animesRepository.putAnimeProgress(userId, animeId, progress);
+    await this.animesRepository.patchAnimeProgress(userId, animeId, progress);
   }
 }

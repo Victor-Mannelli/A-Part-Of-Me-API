@@ -135,7 +135,7 @@ export class AnimesRepository {
     });
   }
 
-  async putAnimeProgress(userId: number, animeId: number, progress: number) {
+  async patchAnimeProgress(userId: number, animeId: number, progress: number) {
     await prisma.userAnimeList.update({
       where: {
         user_id_anime_id: {

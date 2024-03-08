@@ -148,7 +148,7 @@ export class AnimesController {
     @Response() res: any,
   ) {
     const response = await this.animesService.updateAnimeProgress(
-      res.locals.user.user_id,
+      res.locals.user_id,
       updateProgressDto.animeId,
       updateProgressDto.progress,
     );
