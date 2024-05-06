@@ -1,7 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+// eslint-disable-next-line prettier/prettier
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
+import { CreateUserSchema, LoginSchema } from './users.schema';
 import { UsersRepository } from './users.repository';
-import { v4 as uuid } from 'uuid';
+import { JwtPayload } from 'src/utils/types';
+import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -9,6 +12,8 @@ export class UsersService {
   constructor(readonly usersRepository: UsersRepository) {}
 
   async create(createUserDto: CreateUserDto) {
+    CreateUserSchema.parse(createUserDto);
+
     const result = await this.usersRepository.checkEmail(createUserDto.email);
     if (result) {
       throw new HttpException(
@@ -27,30 +32,24 @@ export class UsersService {
     });
   }
   async login(loginDto: LoginDto) {
+    LoginSchema.parse(loginDto);
+
     const user = loginDto.login.includes('@')
       ? await this.usersRepository.checkEmail(loginDto.login)
       : await this.usersRepository.checkUsername(loginDto.login);
-    if (!user) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          message: "User doesn't exist!",
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    if (!user) throw new UnauthorizedException();
+
     if (!bcrypt.compareSync(loginDto.password, user.password)) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          message: 'Wrong password!',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new UnauthorizedException();
     }
-    const userId: number = user.user_id;
-    await this.usersRepository.deleteUserSessions(userId);
-    return await this.usersRepository.logingUser({ userId, token: uuid() });
+    const newJwt: JwtPayload = {
+      user_id: user.user_id.toString(),
+      email: user.email,
+      username: user.username,
+      // avatar: user.avatar,
+    };
+    return jwt.sign(newJwt, process.env.JWT_SECRET);
+    // return await this.usersRepository.logingUser({ userId, token: uuid() });
   }
 
   async findAll() {
