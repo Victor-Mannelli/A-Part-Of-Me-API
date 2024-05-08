@@ -8,7 +8,8 @@ export class AuthMiddleware implements NestMiddleware {
   async use(req: any, res: any, next: () => void) {
     const token: string = req.headers.authorization?.replace('Bearer ', '');
     if (!token) throw new UnauthorizedException();
-    jwt.verify(token, process.env.API_SECRET || '', (err) => {
+
+    jwt.verify(token, process.env.JWT_SECRET || '', (err) => {
       if (err) throw new UnauthorizedException();
     });
 
@@ -18,12 +19,12 @@ export class AuthMiddleware implements NestMiddleware {
 
     const user = await prisma.user.findFirst({
       where: {
-        user_id: jwtPayload.user_id,
+        user_id: Number(jwtPayload.user_id),
       },
     });
     if (!user) throw new NotAcceptableException();
 
-    res.locals.user_id = jwtPayload.user_id;
+    res.locals.user_id = Number(jwtPayload.user_id);
     next();
   }
 }

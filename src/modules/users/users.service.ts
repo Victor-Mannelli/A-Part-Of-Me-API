@@ -48,7 +48,7 @@ export class UsersService {
       username: user.username,
       // avatar: user.avatar,
     };
-    return jwt.sign(newJwt, process.env.JWT_SECRET);
+    return { token: jwt.sign(newJwt, process.env.JWT_SECRET) };
     // return await this.usersRepository.logingUser({ userId, token: uuid() });
   }
 
