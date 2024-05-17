@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AnimesStatusDto {
+export class UserAnimeStatusDto {
   @ApiProperty()
-  userId: string;
+  id: number;
   @ApiProperty()
-  animeId: number;
+  user_id: number;
+  @ApiProperty()
+  anime_id: number;
   @ApiProperty()
   status: string;
   @ApiProperty()
@@ -14,9 +16,9 @@ export class AnimesStatusDto {
   @ApiProperty()
   rewatches: number;
   @ApiProperty()
-  startDate: string;
+  start_date: string;
   @ApiProperty()
-  finishDate: string;
+  finish_date: string;
   @ApiProperty()
   favorite: boolean;
 }

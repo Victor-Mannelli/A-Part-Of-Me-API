@@ -10,26 +10,14 @@ export class AnimesRepository {
     this.prisma = prisma;
   }
 
-  async findOneAnime(animeId: number) {
-    return await prisma.anime.findFirst({
+  async findOne(animeId: number) {
+    return await prisma.anime.findUnique({
       where: {
         anime_id: animeId,
       },
     });
   }
 
-  async findUserAnimeList(userId: number) {
-    return await prisma.userAnimeList.findMany({
-      where: {
-        user_id: userId,
-      },
-      include: {
-        anime: true,
-      },
-    });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async populateAnimeTable(animeData: types.AnimeData) {
     await prisma.anime.upsert({
       where: {
@@ -90,61 +78,6 @@ export class AnimesRepository {
         genres: animeData.genres,
         average_score: animeData.averageScore,
         next_airing_episode: animeData.nextAiringEpisode,
-      },
-    });
-  }
-
-  async postAnimeStatusForUser({
-    userId,
-    animeId,
-    status,
-    score,
-    progress,
-    rewatches,
-    startDate,
-    finishDate,
-    favorite,
-  }: types.UserAnimeStatus) {
-    await prisma.userAnimeList.upsert({
-      where: {
-        user_id_anime_id: {
-          user_id: userId,
-          anime_id: animeId,
-        },
-      },
-      update: {
-        status,
-        score,
-        progress,
-        rewatches,
-        start_date: startDate,
-        finish_date: finishDate,
-        favorite,
-      },
-      create: {
-        user_id: userId,
-        anime_id: animeId,
-        status,
-        score,
-        progress,
-        rewatches,
-        start_date: startDate,
-        finish_date: finishDate,
-        favorite,
-      },
-    });
-  }
-
-  async patchAnimeProgress(userId: number, animeId: number, progress: number) {
-    await prisma.userAnimeList.update({
-      where: {
-        user_id_anime_id: {
-          user_id: userId,
-          anime_id: animeId,
-        },
-      },
-      data: {
-        progress,
       },
     });
   }

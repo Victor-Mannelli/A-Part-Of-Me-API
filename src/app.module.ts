@@ -6,9 +6,16 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
 import { AnimesModule } from './modules/animes/animes.module';
 import { UsersModule } from './modules/users/users.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AnimelistModule } from './modules/animelist/animelist.module';
 
 @Module({
-  imports: [UsersModule, AnimesModule, FriendsModule, MessagesModule],
+  imports: [
+    UsersModule,
+    AnimesModule,
+    FriendsModule,
+    MessagesModule,
+    AnimelistModule,
+  ],
   controllers: [],
   providers: [
     {
