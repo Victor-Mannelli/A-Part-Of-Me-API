@@ -1,13 +1,9 @@
-import { PrismaClient, UserAnimeList } from '@prisma/client';
+import { UserAnimeList } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { prisma } from 'src/utils';
 
 @Injectable()
 export class AnimelistRepository {
-  prisma: PrismaClient;
-  constructor() {
-    this.prisma = prisma;
-  }
 
   async findOne(userId: number) {
     return await prisma.userAnimeList.findMany({
@@ -20,7 +16,9 @@ export class AnimelistRepository {
     });
   }
 
-  async postUsersAnimesStatus(userAnimeStatus: UserAnimeList) {
+  async upsertUsersAnimesStatus(userAnimeStatus: any) {
+    console.log(userAnimeStatus);
+    return
     await prisma.userAnimeList.upsert({
       where: {
         user_id_anime_id: {
@@ -51,8 +49,12 @@ export class AnimelistRepository {
     });
   }
 
-  async patchUserProgress(userId: number, animeId: number, progress: number) {
-    await prisma.userAnimeList.update({
+  async patchUserProgress({ userId, animeId, progress }: {
+    userId: number,
+    animeId: number,
+    progress: number,
+  }) {
+    return await prisma.userAnimeList.update({
       where: {
         user_id_anime_id: {
           user_id: userId,
@@ -65,7 +67,7 @@ export class AnimelistRepository {
     });
   }
 
-  async deleteAnimeFromList(userId: number, animeId: number) {
+  async deleteAnimeFromList({ userId, animeId }: { userId: number, animeId: number }) {
     await prisma.userAnimeList.delete({
       where: {
         user_id_anime_id: {

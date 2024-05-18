@@ -91,17 +91,17 @@ model Anime {
 
 model UserAnimeList {
   id          Int       @id @default(autoincrement())
-  user_id     Int      
+  user_id     Int
   user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  anime_id    Int      
+  anime_id    Int
   anime       Anime     @relation(fields: [anime_id], references: [anime_id])
-  status      String?
-  score       Int?
-  progress    Int?
-  rewatches   Int?
-  start_date  Int?
-  finish_date Int?
-  favorite    Boolean?
+  status      String
+  score       Int       @default(0)
+  progress    Int       @default(0)
+  rewatches   Int       @default(0)
+  start_date  DateTime
+  finish_date DateTime?
+  favorite    Boolean   @default(false)
 
   @@unique([user_id, anime_id])
   @@map("user_anime_list")

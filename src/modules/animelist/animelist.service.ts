@@ -1,34 +1,39 @@
 import { AnimelistRepository } from './animelist.repository';
+import { UserAnimeStatusDto } from './animes.dto';
 import { Injectable } from '@nestjs/common';
-// import { UserAnimeStatusDto } from './animes.dto';
 
 @Injectable()
 export class AnimelistService {
-  constructor(readonly animelistRepository: AnimelistRepository) {}
+  constructor(readonly animelistRepository: AnimelistRepository) { }
 
   async findOne(userId: number) {
     return await this.animelistRepository.findOne(userId);
   }
 
   // async populateUserAnimelist(userAnimeStatus: UserAnimeStatusDto) {
-  async populateUserAnimelist(userAnimeStatus: any) {
-    return await this.animelistRepository.postUsersAnimesStatus(
+  async populateUserAnimelist(userAnimeStatus: UserAnimeStatusDto & { user_id: number }) {
+    return await this.animelistRepository.upsertUsersAnimesStatus(
       userAnimeStatus,
     );
   }
-  // create(createAnimelistDto: any) {
-  //   return 'This action adds a new animelist';
-  // }
 
-  // update(id: number, updateAnimelistDto: any) {
-  //   return `This action updates a #${id} animelist`;
-  // }
+  async updateUserProgress({ userId, animeId, progress }: {
+    userId: number,
+    animeId: number,
+    progress: number,
+  }) {
+    return await this.animelistRepository.patchUserProgress({ userId, animeId, progress });
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} animelist`;
-  // }
-
-  // async updateAnimeProgress(userId: number, animeId: number, progress: number) {
-  //   await this.animesRepository.patchAnimeProgress(userId, animeId, progress);
-  // }
+  async remove({ userId, animeId }: { userId: number, animeId: number }) {
+    return await this.animelistRepository.deleteAnimeFromList({ userId, animeId })
+  }
 }
+
+// create(createAnimelistDto: any) {
+//   return 'This action adds a new animelist';
+// }
+
+// update(id: number, updateAnimelistDto: any) {
+//   return `This action updates a #${id} animelist`;
+// }
