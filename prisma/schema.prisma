@@ -99,8 +99,8 @@ model UserAnimeList {
   score       Int       @default(0)
   progress    Int       @default(0)
   rewatches   Int       @default(0)
-  start_date  DateTime
-  finish_date DateTime?
+  start_date  String
+  finish_date String?
   favorite    Boolean   @default(false)
 
   @@unique([user_id, anime_id])

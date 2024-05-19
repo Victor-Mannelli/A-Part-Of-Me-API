@@ -12,107 +12,113 @@ export class AnimesController {
   }
 
   @Post('/populate')
-  async populateAnimeTable(@Body() id: any) {
+  async populateAnimeTable(@Body() id: number) {
     z.object({ id: z.number() }).parse(id);
-    const variables = id;
     const query = `
-        query ($id: Int) {
-          Media (id: $id) {
-            id
-            title {
-              romaji
-              english
-              native
-            }
-            type
-            format
-            status
-            description
-            startDate {
-              year
-              month
-              day
-            }
-            endDate {
-              year
-              month
-              day
-            }
-            season
-            episodes
-            duration
-            chapters
-            volumes
-            source
-            hashtag
-            trailer {
+          query ($id: Int) {
+            Media (id: $id) {
               id
-              site
-              thumbnail
-            }
-            updatedAt
-            coverImage {
-              extraLarge
-              large
-              medium
-            }
-            bannerImage
-            genres
-            synonyms
-            averageScore
-            meanScore
-            popularity
-            trending
-            favourites
-            tags {
-              id
-              name
+              title {
+                romaji
+                english
+                native
+              }
+              type
+              format
+              status
               description
-              category
-              isAdult
-            }
-            characters {
-              nodes {
+              startDate {
+                year
+                month
+                day
+              }
+              endDate {
+                year
+                month
+                day
+              }
+              season
+              episodes
+              duration
+              chapters
+              volumes
+              source
+              hashtag
+              trailer {
                 id
-                name {
-                  full
-                }
-                image {
-                  large
-                  medium
-                }
-                gender
+                site
+                thumbnail
+              }
+              updatedAt
+              coverImage {
+                extraLarge
+                large
+                medium
+              }
+              bannerImage
+              genres
+              synonyms
+              averageScore
+              meanScore
+              popularity
+              trending
+              favourites
+              tags {
+                id
+                name
                 description
-                dateOfBirth {
-                  year
-                  month
-                  day
+                category
+                isAdult
+              }
+              characters {
+                nodes {
+                  id
+                  name {
+                    full
+                  }
+                  image {
+                    large
+                    medium
+                  }
+                  gender
+                  description
+                  dateOfBirth {
+                    year
+                    month
+                    day
+                  }
+                  age
+                  bloodType
+                  isFavourite
+                  favourites
                 }
-                age
-                bloodType
-                isFavourite
-                favourites
+              }
+              isAdult
+              nextAiringEpisode {
+                id
+                timeUntilAiring
+                episode
               }
             }
-            isAdult
-            nextAiringEpisode {
-              id
-              timeUntilAiring
-              episode
-            }
           }
-        }
-      `;
-    const { data }: any = await axios.post(
-      `${process.env.ANIME_URL}`,
-      { query, variables },
-      {
+        `;
+    try {
+      const { data } = await axios({
+        url: `${process.env.ANIME_URL}`,
+        method: "post",
+        data: {
+          query,
+          variables: id
+        },
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-      },
-    );
-    return await this.animesService.populateAnimeTable(data.data.Media);
+      });
+      return await this.animesService.populateAnimeTable(data.data.Media);
+    } catch (error) {
+      console.log(error)
+      return "Error on finding anime"
+    }
   }
 }

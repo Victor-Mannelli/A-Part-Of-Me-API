@@ -1,4 +1,4 @@
-import { UserAnimeList } from '@prisma/client';
+import { UpdateAnimeStatusType } from "./animelist.type"
 import { Injectable } from '@nestjs/common';
 import { prisma } from 'src/utils';
 
@@ -17,8 +17,15 @@ export class AnimelistRepository {
   }
 
   async upsertUsersAnimesStatus(userAnimeStatus: any) {
-    console.log(userAnimeStatus);
-    return
+    let updateObj: Omit<UpdateAnimeStatusType, "user_id" | "animeId">;
+    let createObj: UpdateAnimeStatusType;
+
+    for (const key in userAnimeStatus) {
+      createObj = { ...createObj, [key]: userAnimeStatus[key] }
+      if (key !== "user_id" && key !== "anime_id") {
+        updateObj = { ...updateObj, [key]: userAnimeStatus[key] }
+      }
+    }
     await prisma.userAnimeList.upsert({
       where: {
         user_id_anime_id: {
@@ -26,26 +33,8 @@ export class AnimelistRepository {
           anime_id: userAnimeStatus.anime_id,
         },
       },
-      update: {
-        status: userAnimeStatus.status,
-        score: userAnimeStatus.score,
-        progress: userAnimeStatus.progress,
-        rewatches: userAnimeStatus.rewatches,
-        start_date: userAnimeStatus.start_date,
-        finish_date: userAnimeStatus.finish_date,
-        favorite: userAnimeStatus.favorite,
-      },
-      create: {
-        user_id: userAnimeStatus.user_id,
-        anime_id: userAnimeStatus.anime_id,
-        status: userAnimeStatus.status,
-        score: userAnimeStatus.score,
-        progress: userAnimeStatus.progress,
-        rewatches: userAnimeStatus.rewatches,
-        start_date: userAnimeStatus.start_date,
-        finish_date: userAnimeStatus.finish_date,
-        favorite: userAnimeStatus.favorite,
-      },
+      update: updateObj,
+      create: createObj,
     });
   }
 

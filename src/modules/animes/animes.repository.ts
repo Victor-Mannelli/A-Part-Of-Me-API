@@ -19,6 +19,16 @@ export class AnimesRepository {
   }
 
   async populateAnimeTable(animeData: types.AnimeData) {
+    const end_date = (animeData.endDate.year === null || animeData.endDate.month === null || animeData.endDate.day === null)
+      ? null
+      : Math.round(
+        new Date(
+          animeData.endDate.year,
+          animeData.endDate.month - 1,
+          animeData.endDate.day,
+        ).getTime() / 1000,
+      )
+
     await prisma.anime.upsert({
       where: {
         anime_id: animeData.id,
@@ -35,13 +45,7 @@ export class AnimesRepository {
             animeData.startDate.day,
           ).getTime() / 1000,
         ),
-        end_date: Math.round(
-          new Date(
-            animeData.endDate.year,
-            animeData.endDate.month - 1,
-            animeData.endDate.day,
-          ).getTime() / 1000,
-        ),
+        end_date,
         episodes: animeData.episodes,
         chapters: animeData.chapters,
         volumes: animeData.volumes,
@@ -63,13 +67,7 @@ export class AnimesRepository {
             animeData.startDate.day,
           ).getTime() / 1000,
         ),
-        end_date: Math.round(
-          new Date(
-            animeData.endDate.year,
-            animeData.endDate.month - 1,
-            animeData.endDate.day,
-          ).getTime() / 1000,
-        ),
+        end_date,
         episodes: animeData.episodes,
         chapters: animeData.chapters,
         volumes: animeData.volumes,
