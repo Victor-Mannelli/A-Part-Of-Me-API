@@ -80,6 +80,7 @@ model Anime {
   trailer_id          String?
   trailer_site        String?
   trailer_thumbnail   String?
+  tags                Json?
   chapters            Int?
   volumes             Int?
   cover_image         String?

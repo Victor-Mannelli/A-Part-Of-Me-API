@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Response, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Response,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UserAnimeStatusSchema } from './animelist.schema';
 import { AnimelistService } from './animelist.service';
 import { UserAnimeStatusDto } from './animes.dto';
@@ -6,7 +15,7 @@ import { z } from 'zod';
 
 @Controller('animelist')
 export class AnimelistController {
-  constructor(private readonly animelistService: AnimelistService) { }
+  constructor(private readonly animelistService: AnimelistService) {}
 
   @Get()
   async findOne(@Response() res: any) {
@@ -15,17 +24,26 @@ export class AnimelistController {
   }
 
   @Post()
-  async populateUserAnimelist(@Response() res: any, @Body() userAnimeStatus: UserAnimeStatusDto) {
+  async populateUserAnimelist(
+    @Response() res: any,
+    @Body() userAnimeStatus: UserAnimeStatusDto,
+  ) {
     UserAnimeStatusSchema.parse(userAnimeStatus);
+
     const response = await this.animelistService.populateUserAnimelist({
-      user_id: res.locals.user_id, ...userAnimeStatus
+      user_id: res.locals.user_id,
+      ...userAnimeStatus,
     });
     res.status(200).send(response);
   }
 
   @Patch(':id')
-  async update(@Response() res: any, @Param('id') id: string, @Body() { progress }: { progress: number }) {
-    z.number().parse(progress)
+  async update(
+    @Response() res: any,
+    @Param('id') id: string,
+    @Body() { progress }: { progress: number },
+  ) {
+    z.number().parse(progress);
     await this.animelistService.updateUserProgress({
       userId: +res.locals.user_id,
       animeId: +id,

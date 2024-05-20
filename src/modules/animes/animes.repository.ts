@@ -10,37 +10,40 @@ export class AnimesRepository {
     this.prisma = prisma;
   }
 
-  async findOne({ anime_id, user_id }: { anime_id: number, user_id?: number }) {
-    return user_id ?
-      await prisma.anime.findUnique({
-        where: {
-          anime_id,
-        },
-        include: {
-          UserAnimeList: {
-            where: {
-              user_id,
-            }
-          }
-        }
-      })
+  async findOne({ anime_id, user_id }: { anime_id: number; user_id?: number }) {
+    return user_id
+      ? await prisma.anime.findUnique({
+          where: {
+            anime_id,
+          },
+          include: {
+            UserAnimeList: {
+              where: {
+                user_id,
+              },
+            },
+          },
+        })
       : await prisma.anime.findUnique({
-        where: {
-          anime_id,
-        },
-      })
+          where: {
+            anime_id,
+          },
+        });
   }
 
   async populateAnimeTable(animeData: types.AnimeData) {
-    const end_date = (animeData.endDate.year === null || animeData.endDate.month === null || animeData.endDate.day === null)
-      ? null
-      : Math.round(
-        new Date(
-          animeData.endDate.year,
-          animeData.endDate.month - 1,
-          animeData.endDate.day,
-        ).getTime() / 1000,
-      )
+    const end_date =
+      animeData.endDate.year === null ||
+      animeData.endDate.month === null ||
+      animeData.endDate.day === null
+        ? null
+        : Math.round(
+            new Date(
+              animeData.endDate.year,
+              animeData.endDate.month - 1,
+              animeData.endDate.day,
+            ).getTime() / 1000,
+          );
 
     await prisma.anime.upsert({
       where: {
@@ -60,6 +63,7 @@ export class AnimesRepository {
         ),
         end_date,
         episodes: animeData.episodes,
+        tags: animeData.tags.map((e) => e.name),
         trailer_id: animeData.trailer.id,
         trailer_site: animeData.trailer.site,
         trailer_thumbnail: animeData.trailer.thumbnail,
@@ -85,6 +89,7 @@ export class AnimesRepository {
         ),
         end_date,
         episodes: animeData.episodes,
+        tags: animeData.tags.map((e) => e.name),
         trailer_id: animeData.trailer.id,
         trailer_site: animeData.trailer.site,
         trailer_thumbnail: animeData.trailer.thumbnail,
