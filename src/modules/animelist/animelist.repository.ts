@@ -10,9 +10,13 @@ export class AnimelistRepository {
       where: {
         user_id: userId,
       },
-      // include: {
-      //   anime: true,
-      // },
+      include: {
+        anime: {
+          select: {
+            cover_image: true,
+          }
+        }
+      },
     });
   }
 

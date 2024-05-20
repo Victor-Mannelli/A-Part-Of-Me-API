@@ -77,6 +77,9 @@ model Anime {
   start_date          Int?
   end_date            Int?
   episodes            Int?
+  trailer_id          String?
+  trailer_site        String?
+  trailer_thumbnail   String?
   chapters            Int?
   volumes             Int?
   cover_image         String?
@@ -90,18 +93,18 @@ model Anime {
 }
 
 model UserAnimeList {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   user_id     Int
-  user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user        User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   anime_id    Int
-  anime       Anime     @relation(fields: [anime_id], references: [anime_id])
+  anime       Anime   @relation(fields: [anime_id], references: [anime_id])
   status      String
-  score       Int       @default(0)
-  progress    Int       @default(0)
-  rewatches   Int       @default(0)
+  score       Int     @default(0)
+  progress    Int     @default(0)
+  rewatches   Int     @default(0)
   start_date  String
   finish_date String?
-  favorite    Boolean   @default(false)
+  favorite    Boolean @default(false)
 
   @@unique([user_id, anime_id])
   @@map("user_anime_list")

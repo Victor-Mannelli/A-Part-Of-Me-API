@@ -26,7 +26,7 @@ export type AnimeData = {
   volumes: number;
   source: string;
   trailer: {
-    id: number;
+    id: string;
     site: string;
     thumbnail: string;
   };

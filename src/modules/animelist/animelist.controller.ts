@@ -17,7 +17,9 @@ export class AnimelistController {
   @Post()
   async populateUserAnimelist(@Response() res: any, @Body() userAnimeStatus: UserAnimeStatusDto) {
     UserAnimeStatusSchema.parse(userAnimeStatus);
-    const response = await this.animelistService.populateUserAnimelist({user_id: res.locals.user_id, ...userAnimeStatus});
+    const response = await this.animelistService.populateUserAnimelist({
+      user_id: res.locals.user_id, ...userAnimeStatus
+    });
     res.status(200).send(response);
   }
 
