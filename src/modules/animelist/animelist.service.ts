@@ -10,7 +10,6 @@ export class AnimelistService {
     return await this.animelistRepository.findOne(userId);
   }
 
-  // async populateUserAnimelist(userAnimeStatus: UserAnimeStatusDto) {
   async populateUserAnimelist(userAnimeStatus: UserAnimeStatusDto & { user_id: number }) {
     return await this.animelistRepository.upsertUsersAnimesStatus(
       userAnimeStatus,

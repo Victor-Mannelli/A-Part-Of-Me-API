@@ -10,12 +10,25 @@ export class AnimesRepository {
     this.prisma = prisma;
   }
 
-  async findOne(animeId: number) {
-    return await prisma.anime.findUnique({
-      where: {
-        anime_id: animeId,
-      },
-    });
+  async findOne({ anime_id, user_id }: { anime_id: number, user_id?: number }) {
+    return user_id ?
+      await prisma.anime.findUnique({
+        where: {
+          anime_id,
+        },
+        include: {
+          UserAnimeList: {
+            where: {
+              user_id,
+            }
+          }
+        }
+      })
+      : await prisma.anime.findUnique({
+        where: {
+          anime_id,
+        },
+      })
   }
 
   async populateAnimeTable(animeData: types.AnimeData) {

@@ -10,9 +10,9 @@ export class AnimelistRepository {
       where: {
         user_id: userId,
       },
-      include: {
-        anime: true,
-      },
+      // include: {
+      //   anime: true,
+      // },
     });
   }
 
@@ -26,7 +26,7 @@ export class AnimelistRepository {
         updateObj = { ...updateObj, [key]: userAnimeStatus[key] }
       }
     }
-    await prisma.userAnimeList.upsert({
+    return await prisma.userAnimeList.upsert({
       where: {
         user_id_anime_id: {
           user_id: userAnimeStatus.user_id,
