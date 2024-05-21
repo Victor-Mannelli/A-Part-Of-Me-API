@@ -13,38 +13,25 @@ export class AnimesRepository {
   async findOne({ anime_id, user_id }: { anime_id: number; user_id?: number }) {
     return user_id
       ? await prisma.anime.findUnique({
-          where: {
-            anime_id,
-          },
-          include: {
-            UserAnimeList: {
-              where: {
-                user_id,
-              },
+        where: {
+          anime_id,
+        },
+        include: {
+          UserAnimeList: {
+            where: {
+              user_id,
             },
           },
-        })
+        },
+      })
       : await prisma.anime.findUnique({
-          where: {
-            anime_id,
-          },
-        });
+        where: {
+          anime_id,
+        },
+      });
   }
 
   async populateAnimeTable(animeData: types.AnimeData) {
-    const end_date =
-      animeData.endDate.year === null ||
-      animeData.endDate.month === null ||
-      animeData.endDate.day === null
-        ? null
-        : Math.round(
-            new Date(
-              animeData.endDate.year,
-              animeData.endDate.month - 1,
-              animeData.endDate.day,
-            ).getTime() / 1000,
-          );
-
     await prisma.anime.upsert({
       where: {
         anime_id: animeData.id,
@@ -54,26 +41,18 @@ export class AnimesRepository {
         title: animeData.title.romaji,
         status: animeData.status,
         description: animeData.description,
-        start_date: Math.round(
-          new Date(
-            animeData.startDate.year,
-            animeData.startDate.month - 1,
-            animeData.startDate.day,
-          ).getTime() / 1000,
-        ),
-        end_date,
+        startDate: animeData.startDate,
+        endDate: animeData.endDate,
         episodes: animeData.episodes,
-        tags: animeData.tags.map((e) => e.name),
-        trailer_id: animeData.trailer.id,
-        trailer_site: animeData.trailer.site,
-        trailer_thumbnail: animeData.trailer.thumbnail,
+        tags: animeData.tags,
+        trailer: animeData.trailer,
         chapters: animeData.chapters,
         volumes: animeData.volumes,
-        cover_image: animeData.coverImage.extraLarge,
-        banner_image: animeData.bannerImage,
+        coverImage: animeData.coverImage,
+        bannerImage: animeData.bannerImage,
         genres: animeData.genres,
-        average_score: animeData.averageScore,
-        next_airing_episode: animeData.nextAiringEpisode,
+        averageScore: animeData.averageScore,
+        nextAiringEpisode: animeData.nextAiringEpisode,
         updated_at: Date.now().toString(),
       },
       create: {
@@ -81,26 +60,18 @@ export class AnimesRepository {
         title: animeData.title.romaji,
         status: animeData.status,
         description: animeData.description,
-        start_date: Math.round(
-          new Date(
-            animeData.startDate.year,
-            animeData.startDate.month - 1,
-            animeData.startDate.day,
-          ).getTime() / 1000,
-        ),
-        end_date,
+        startDate: animeData.startDate,
+        endDate: animeData.endDate,
         episodes: animeData.episodes,
-        tags: animeData.tags.map((e) => e.name),
-        trailer_id: animeData.trailer.id,
-        trailer_site: animeData.trailer.site,
-        trailer_thumbnail: animeData.trailer.thumbnail,
+        tags: animeData.tags,
+        trailer: animeData.trailer,
         chapters: animeData.chapters,
         volumes: animeData.volumes,
-        cover_image: animeData.coverImage.extraLarge,
-        banner_image: animeData.bannerImage,
+        coverImage: animeData.coverImage,
+        bannerImage: animeData.bannerImage,
         genres: animeData.genres,
-        average_score: animeData.averageScore,
-        next_airing_episode: animeData.nextAiringEpisode,
+        averageScore: animeData.averageScore,
+        nextAiringEpisode: animeData.nextAiringEpisode,
         updated_at: Date.now().toString(),
       },
     });

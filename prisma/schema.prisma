@@ -69,27 +69,25 @@ model Message {
 }
 
 model Anime {
-  id                  Int             @id @default(autoincrement())
-  anime_id            Int             @unique
-  title               String?
-  status              String?
-  description         String?
-  start_date          Int?
-  end_date            Int?
-  episodes            Int?
-  trailer_id          String?
-  trailer_site        String?
-  trailer_thumbnail   String?
-  tags                Json?
-  chapters            Int?
-  volumes             Int?
-  cover_image         String?
-  banner_image        String?
-  genres              Json?
-  average_score       Int?
-  next_airing_episode Json?
-  updated_at          String
-  UserAnimeList       UserAnimeList[] 
+  id                Int             @id @default(autoincrement())
+  anime_id          Int             @unique
+  title             String?
+  status            String?
+  description       String?
+  startDate         Json?
+  endDate           Json?
+  episodes          Int?
+  trailer           Json?
+  tags              Json?
+  chapters          Int?
+  volumes           Int?
+  coverImage        Json?
+  bannerImage       String?
+  genres            Json?
+  averageScore      Int?
+  nextAiringEpisode Json?
+  updated_at        String
+  UserAnimeList     UserAnimeList[]
 
   @@map("animes")
 }

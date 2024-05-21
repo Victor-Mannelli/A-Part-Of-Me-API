@@ -12,7 +12,7 @@ export class AnimelistRepository {
       include: {
         anime: {
           select: {
-            cover_image: true,
+            coverImage: true,
             title: true,
           },
         },
