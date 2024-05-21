@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Response,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Response, Patch, Param, Delete } from '@nestjs/common';
 import { UserAnimeStatusSchema } from './animelist.schema';
 import { AnimelistService } from './animelist.service';
 import { UserAnimeStatusDto } from './animes.dto';
@@ -15,7 +6,7 @@ import { z } from 'zod';
 
 @Controller('animelist')
 export class AnimelistController {
-  constructor(private readonly animelistService: AnimelistService) {}
+  constructor(private readonly animelistService: AnimelistService) { }
 
   @Get()
   async findOne(@Response() res: any) {

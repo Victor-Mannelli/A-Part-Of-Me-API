@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AnimelistService {
-  constructor(readonly animelistRepository: AnimelistRepository) {}
+  constructor(readonly animelistRepository: AnimelistRepository) { }
 
   async findOne(userId: number) {
     return await this.animelistRepository.findOne(userId);
@@ -18,11 +18,7 @@ export class AnimelistService {
     );
   }
 
-  async updateUserProgress({
-    userId,
-    animeId,
-    progress,
-  }: {
+  async updateUserProgress({ userId, animeId, progress }: {
     userId: number;
     animeId: number;
     progress: number;

@@ -13,6 +13,7 @@ export class AnimelistRepository {
         anime: {
           select: {
             cover_image: true,
+            title: true,
           },
         },
       },
@@ -41,11 +42,7 @@ export class AnimelistRepository {
     });
   }
 
-  async patchUserProgress({
-    userId,
-    animeId,
-    progress,
-  }: {
+  async patchUserProgress({ userId, animeId, progress }: {
     userId: number;
     animeId: number;
     progress: number;

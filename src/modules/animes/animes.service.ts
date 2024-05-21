@@ -28,7 +28,7 @@ export class AnimesService {
     const anime = await this.animesRepository.findOne({
       anime_id: id,
     });
-    if (Number(anime.updated_at) - Date.now() < 2629743000) return;
+    if (anime && Number(anime.updated_at) - Date.now() < 2629743000) return;
     const query = `
       query ($id: Int) {
         Media (id: $id) {
