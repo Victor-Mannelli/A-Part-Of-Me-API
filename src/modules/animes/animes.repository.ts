@@ -74,6 +74,7 @@ export class AnimesRepository {
         genres: animeData.genres,
         average_score: animeData.averageScore,
         next_airing_episode: animeData.nextAiringEpisode,
+        updated_at: Date.now().toString(),
       },
       create: {
         anime_id: animeData.id,
@@ -100,6 +101,7 @@ export class AnimesRepository {
         genres: animeData.genres,
         average_score: animeData.averageScore,
         next_airing_episode: animeData.nextAiringEpisode,
+        updated_at: Date.now().toString(),
       },
     });
   }

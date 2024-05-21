@@ -88,7 +88,8 @@ model Anime {
   genres              Json?
   average_score       Int?
   next_airing_episode Json?
-  UserAnimeList       UserAnimeList[]
+  updated_at          String
+  UserAnimeList       UserAnimeList[] 
 
   @@map("animes")
 }
@@ -98,7 +99,7 @@ model UserAnimeList {
   user_id     Int
   user        User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   anime_id    Int
-  anime       Anime   @relation(fields: [anime_id], references: [anime_id])
+  anime       Anime   @relation(fields: [anime_id], references: [anime_id], onDelete: Cascade)
   status      String
   score       Int     @default(0)
   progress    Int     @default(0)

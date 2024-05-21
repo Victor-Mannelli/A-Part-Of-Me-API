@@ -8,13 +8,10 @@ export class AnimesService {
   constructor(
     readonly animesRepository: AnimesRepository,
     readonly animelistService: AnimelistService,
-  ) {}
+  ) { }
 
   async findOne({ anime_id, user_id }: { anime_id: number; user_id: number }) {
-    const animeExist = await this.animesRepository.findOne({ anime_id });
-    if (!animeExist) {
-      await this.populateAnimeTable(anime_id);
-    }
+    await this.populateAnimeTable(anime_id);
     const userAnimelist = await this.animelistService.findOne(user_id);
     if (userAnimelist.find((e) => e.anime_id === anime_id)) {
       const animeData: any = await this.animesRepository.findOne({
@@ -28,10 +25,10 @@ export class AnimesService {
   }
 
   async populateAnimeTable(id: number) {
-    const response = await this.animesRepository.findOne({
+    const anime = await this.animesRepository.findOne({
       anime_id: id,
     });
-    if (response) return;
+    if (Number(anime.updated_at) - Date.now() < 2629743000) return;
     const query = `
       query ($id: Int) {
         Media (id: $id) {
