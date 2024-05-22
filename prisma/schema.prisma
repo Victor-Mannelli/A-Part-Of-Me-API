@@ -71,7 +71,7 @@ model Message {
 model Anime {
   id                Int             @id @default(autoincrement())
   anime_id          Int             @unique
-  title             String?
+  title             Json?
   status            String?
   description       String?
   startDate         Json?

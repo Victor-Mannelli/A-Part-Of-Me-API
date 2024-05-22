@@ -14,6 +14,7 @@ export class AnimelistRepository {
           select: {
             coverImage: true,
             title: true,
+            nextAiringEpisode: true,
           },
         },
       },

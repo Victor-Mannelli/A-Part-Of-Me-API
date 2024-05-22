@@ -38,7 +38,7 @@ export class AnimesRepository {
       },
       update: {
         anime_id: animeData.id,
-        title: animeData.title.romaji,
+        title: animeData.title,
         status: animeData.status,
         description: animeData.description,
         startDate: animeData.startDate,
@@ -57,7 +57,7 @@ export class AnimesRepository {
       },
       create: {
         anime_id: animeData.id,
-        title: animeData.title.romaji,
+        title: animeData.title,
         status: animeData.status,
         description: animeData.description,
         startDate: animeData.startDate,
