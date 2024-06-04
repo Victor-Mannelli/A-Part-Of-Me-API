@@ -4,7 +4,7 @@ import { FriendsService } from './friends.service';
 
 @Controller('friends')
 export class FriendsController {
-  constructor(private readonly friendsService: FriendsService) { }
+  constructor(private readonly friendsService: FriendsService) {}
 
   // @Post()
   // create(@Body() createFriendDto: CreateFriendDto) {
@@ -41,10 +41,7 @@ export class FriendsController {
   }
 
   @Post('/friendRequest')
-  async sendFriendRequest(
-    @Response() res,
-    @Body() { friend_id }: { friend_id: number },
-  ) {
+  async sendFriendRequest(@Response() res, @Body() { friend_id }: { friend_id: number }) {
     const response = await this.friendsService.sendFriendRequests({
       userId: res.locals.user_id,
       friendId: friend_id,
@@ -53,11 +50,7 @@ export class FriendsController {
   }
 
   @Post('/friendRequest/accept')
-  async acceptFriendRequest(
-    @Body() acceptFriendRequestDto: AcceptFriendRequestDto,
-  ) {
-    return await this.friendsService.acceptFriendRequest(
-      acceptFriendRequestDto,
-    );
+  async acceptFriendRequest(@Body() acceptFriendRequestDto: AcceptFriendRequestDto) {
+    return await this.friendsService.acceptFriendRequest(acceptFriendRequestDto);
   }
 }

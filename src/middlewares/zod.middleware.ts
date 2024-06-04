@@ -5,9 +5,9 @@ import { z } from 'zod';
 
 @Injectable()
 export class ZodErrorsInterceptor implements NestInterceptor {
-  intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
-      catchError((err: any): any => {
+      catchError((err) => {
         if (err instanceof z.ZodError) {
           throw new HttpException(
             {

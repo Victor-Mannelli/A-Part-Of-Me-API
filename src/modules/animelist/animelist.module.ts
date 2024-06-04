@@ -6,6 +6,6 @@ import { Module } from '@nestjs/common';
 @Module({
   controllers: [AnimelistController],
   providers: [AnimelistService, AnimelistRepository],
-  exports: [AnimelistService]
+  exports: [AnimelistService],
 })
 export class AnimelistModule {}

@@ -6,19 +6,16 @@ import { z } from 'zod';
 
 @Controller('animelist')
 export class AnimelistController {
-  constructor(private readonly animelistService: AnimelistService) { }
+  constructor(private readonly animelistService: AnimelistService) {}
 
   @Get()
-  async findOne(@Response() res: any) {
+  async findOne(@Response() res) {
     const response = await this.animelistService.findOne(res.locals.user_id);
     res.status(200).send(response);
   }
 
   @Post()
-  async populateUserAnimelist(
-    @Response() res: any,
-    @Body() userAnimeStatus: UserAnimeStatusDto,
-  ) {
+  async populateUserAnimelist(@Response() res, @Body() userAnimeStatus: UserAnimeStatusDto) {
     UserAnimeStatusSchema.parse(userAnimeStatus);
 
     const response = await this.animelistService.populateUserAnimelist({
@@ -29,11 +26,7 @@ export class AnimelistController {
   }
 
   @Patch(':id')
-  async update(
-    @Response() res: any,
-    @Param('id') id: string,
-    @Body() { progress }: { progress: number },
-  ) {
+  async update(@Response() res, @Param('id') id: string, @Body() { progress }: { progress: number }) {
     z.number().parse(progress);
     await this.animelistService.updateUserProgress({
       userId: +res.locals.user_id,
@@ -44,7 +37,7 @@ export class AnimelistController {
   }
 
   @Delete(':id')
-  async remove(@Response() res: any, @Param('id') id: string) {
+  async remove(@Response() res, @Param('id') id: string) {
     await this.animelistService.remove({
       userId: +res.locals.user_id,
       animeId: +id,

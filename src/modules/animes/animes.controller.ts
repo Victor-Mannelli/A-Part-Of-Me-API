@@ -5,7 +5,7 @@ export class AnimesController {
   constructor(private readonly animesService: AnimesService) {}
 
   @Get('/:id')
-  async findOne(@Response() res: any, @Param('id') id: string) {
+  async findOne(@Response() res, @Param('id') id: string) {
     const response = await this.animesService.findOne({
       anime_id: +id,
       user_id: res.locals.user_id,

@@ -1,4 +1,3 @@
-// eslint-disable-next-line prettier/prettier
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
 import { CreateUserSchema, LoginSchema } from './users.schema';
@@ -34,9 +33,7 @@ export class UsersService {
   async login(loginDto: LoginDto) {
     LoginSchema.parse(loginDto);
 
-    const user = loginDto.login.includes('@')
-      ? await this.usersRepository.checkEmail(loginDto.login)
-      : await this.usersRepository.checkUsername(loginDto.login);
+    const user = loginDto.login.includes('@') ? await this.usersRepository.checkEmail(loginDto.login) : await this.usersRepository.checkUsername(loginDto.login);
     if (!user) throw new UnauthorizedException();
 
     if (!bcrypt.compareSync(loginDto.password, user.password)) {

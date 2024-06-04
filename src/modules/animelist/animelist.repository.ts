@@ -21,7 +21,7 @@ export class AnimelistRepository {
     });
   }
 
-  async upsertUsersAnimesStatus(userAnimeStatus: any) {
+  async upsertUsersAnimesStatus(userAnimeStatus) {
     let updateObj: Omit<UpdateAnimeStatusType, 'user_id' | 'anime_id'>;
     let createObj: UpdateAnimeStatusType;
 
@@ -43,11 +43,7 @@ export class AnimelistRepository {
     });
   }
 
-  async patchUserProgress({ userId, animeId, progress }: {
-    userId: number;
-    animeId: number;
-    progress: number;
-  }) {
+  async patchUserProgress({ userId, animeId, progress }: { userId: number; animeId: number; progress: number }) {
     return await prisma.userAnimeList.update({
       where: {
         user_id_anime_id: {
@@ -61,13 +57,7 @@ export class AnimelistRepository {
     });
   }
 
-  async deleteAnimeFromList({
-    userId,
-    animeId,
-  }: {
-    userId: number;
-    animeId: number;
-  }) {
+  async deleteAnimeFromList({ userId, animeId }: { userId: number; animeId: number }) {
     await prisma.userAnimeList.delete({
       where: {
         user_id_anime_id: {

@@ -8,7 +8,7 @@ export class AnimesService {
   constructor(
     readonly animesRepository: AnimesRepository,
     readonly animelistService: AnimelistService,
-  ) { }
+  ) {}
 
   async findOne({ anime_id, user_id }: { anime_id: number; user_id: number }) {
     await this.populateAnimeTable(anime_id);

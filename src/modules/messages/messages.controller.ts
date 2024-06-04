@@ -1,10 +1,10 @@
 // eslint-disable-next-line prettier/prettier
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 
 @Controller('messages')
 export class MessagesController {
-  constructor(private readonly messagesService: MessagesService) { }
+  constructor(private readonly messagesService: MessagesService) {}
 
   // @Post()
   // create(@Body() createMessageDto: CreateMessageDto) {
@@ -36,6 +36,7 @@ export class MessagesController {
   @Post(':id')
   @HttpCode(HttpStatus.CREATED)
   async post(@Body() message: string) {
+    return message;
     // return await this.messagesService.postMessage({
     //   // authorId: res.locals.user.user_id,
     //   // receiverId: Number(req.params.receiverId),
@@ -47,7 +48,7 @@ export class MessagesController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
+    return id;
     // return this.messagesService.remove(+id);
   }
-
 }

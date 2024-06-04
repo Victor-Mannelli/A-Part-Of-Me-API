@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  async use(req: any, res: any, next: () => void) {
+  async use(req, res, next: () => void) {
     const token: string = req.headers.authorization?.replace('Bearer ', '');
     if (!token) throw new UnauthorizedException();
 

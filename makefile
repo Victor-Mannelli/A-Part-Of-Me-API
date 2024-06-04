@@ -2,7 +2,7 @@ dev:
 	clear && npm run start:dev
 
 build:
-	npm run build 
+	npm run pre-commit && npm run build 
 
 test:
 	npm run test

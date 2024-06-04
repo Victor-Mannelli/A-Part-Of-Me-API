@@ -9,13 +9,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AnimelistModule } from './modules/animelist/animelist.module';
 
 @Module({
-  imports: [
-    UsersModule,
-    AnimesModule,
-    FriendsModule,
-    MessagesModule,
-    AnimelistModule,
-  ],
+  imports: [UsersModule, AnimesModule, FriendsModule, MessagesModule, AnimelistModule],
   controllers: [],
   providers: [
     {
@@ -26,12 +20,6 @@ import { AnimelistModule } from './modules/animelist/animelist.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude(
-        { path: 'users/register', method: RequestMethod.ALL },
-        { path: 'users/login', method: RequestMethod.ALL },
-      )
-      .forRoutes('*');
+    consumer.apply(AuthMiddleware).exclude({ path: 'users/register', method: RequestMethod.ALL }, { path: 'users/login', method: RequestMethod.ALL }).forRoutes('*');
   }
 }

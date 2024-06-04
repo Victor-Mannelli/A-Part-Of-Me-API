@@ -5,10 +5,10 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findOne(@Response() res: any) {
+  async findOne(@Response() res) {
     const response = await this.usersService.findOne(res.locals.user_id);
     res.status(200).send(response);
   }
