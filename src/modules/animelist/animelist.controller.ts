@@ -13,6 +13,11 @@ export class AnimelistController {
     const response = await this.animelistService.findOne(res.locals.user_id);
     res.status(200).send(response);
   }
+  @Get('/watching')
+  async findFollowedAnimes(@Response() res) {
+    const response = await this.animelistService.findFollowedAnimes(res.locals.user_id);
+    res.status(200).send(response);
+  }
 
   @Post()
   async populateUserAnimelist(@Response() res, @Body() userAnimeStatus: UserAnimeStatusDto) {

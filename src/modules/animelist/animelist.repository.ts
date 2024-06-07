@@ -9,15 +9,15 @@ export class AnimelistRepository {
       where: {
         user_id: userId,
       },
-      // include: {
-      //   anime: {
-      //     select: {
-      //       coverImage: true,
-      //       title: true,
-      //       nextAiringEpisode: true,
-      //     },
-      //   },
-      // },
+    });
+  }
+
+  async findFollowedAnimes(userId: number) {
+    return await prisma.userAnimeList.findMany({
+      where: {
+        user_id: userId,
+        status: 'Watching',
+      },
     });
   }
 
