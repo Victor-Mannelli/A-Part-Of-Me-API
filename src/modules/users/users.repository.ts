@@ -40,17 +40,6 @@ export class UsersRepository {
       },
     });
   }
-  async logingUser({ userId, token }: { userId: number; token: string }) {
-    return await this.prisma.session.create({
-      data: {
-        user_id: userId,
-        token,
-      },
-      select: {
-        token: true,
-      },
-    });
-  }
 
   async findUser(userId: number) {
     return await this.prisma.user.findFirst({
@@ -71,20 +60,7 @@ export class UsersRepository {
       },
     });
   }
-  async deleteUserSessions(userId: number) {
-    await this.prisma.session.deleteMany({
-      where: {
-        user_id: userId,
-      },
-    });
-  }
-  async findUserId(token: string) {
-    return await this.prisma.session.findFirst({
-      where: {
-        token,
-      },
-    });
-  }
+
   async changePassword(params: types.ChangePassword) {
     await this.prisma.user.update({
       where: {

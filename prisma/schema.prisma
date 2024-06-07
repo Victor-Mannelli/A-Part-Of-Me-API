@@ -18,20 +18,9 @@ model User {
   friendshipsAsUser      Friendship[]    @relation("FriendshipsAsUser")
   messages_sent          Message[]       @relation("MessageAuthor")
   messages_received      Message[]       @relation("MessageReceiver")
-  sessions               Session[]
   UserAnimeList          UserAnimeList[]
 
   @@map("users")
-}
-
-model Session {
-  session_id Int      @id @default(autoincrement())
-  user_id    Int
-  created_at DateTime @default(now())
-  token      String   @unique
-  user       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-
-  @@map("sessions")
 }
 
 model FriendRequest {
@@ -68,36 +57,11 @@ model Message {
   @@map("messages")
 }
 
-model Anime {
-  id                Int             @id @default(autoincrement())
-  anime_id          Int             @unique
-  title             Json?
-  status            String?
-  description       String?
-  startDate         Json?
-  endDate           Json?
-  episodes          Int?
-  trailer           Json?
-  tags              Json?
-  chapters          Int?
-  volumes           Int?
-  coverImage        Json?
-  bannerImage       String?
-  genres            Json?
-  averageScore      Int?
-  nextAiringEpisode Json?
-  updated_at        String
-  UserAnimeList     UserAnimeList[]
-
-  @@map("animes")
-}
-
 model UserAnimeList {
   id          Int     @id @default(autoincrement())
-  user_id     Int
+  user_id     Int     
   user        User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  anime_id    Int
-  anime       Anime   @relation(fields: [anime_id], references: [anime_id], onDelete: Cascade)
+  anime_id    Int    
   status      String
   score       Int     @default(0)
   progress    Int     @default(0)

@@ -3,13 +3,12 @@ import { ZodErrorsInterceptor } from './middlewares/zod.middleware';
 import { MessagesModule } from './modules/messages/messages.module';
 import { FriendsModule } from './modules/friends/friends.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
-import { AnimesModule } from './modules/animes/animes.module';
 import { UsersModule } from './modules/users/users.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AnimelistModule } from './modules/animelist/animelist.module';
 
 @Module({
-  imports: [UsersModule, AnimesModule, FriendsModule, MessagesModule, AnimelistModule],
+  imports: [UsersModule, FriendsModule, MessagesModule, AnimelistModule],
   controllers: [],
   providers: [
     {
