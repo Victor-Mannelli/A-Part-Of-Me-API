@@ -33,7 +33,9 @@ export class UsersService {
   async login(loginDto: LoginDto) {
     LoginSchema.parse(loginDto);
 
-    const user = loginDto.login.includes('@') ? await this.usersRepository.checkEmail(loginDto.login) : await this.usersRepository.checkUsername(loginDto.login);
+    const user = loginDto.login.includes('@')
+      ? await this.usersRepository.checkEmail(loginDto.login)
+      : await this.usersRepository.checkUsername(loginDto.login);
     if (!user) throw new UnauthorizedException();
 
     if (!bcrypt.compareSync(loginDto.password, user.password)) {

@@ -14,10 +14,14 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js', 'dist/**/*'],
   rules: {
-    semi: ['error', 'always'],
-    quotes: ['error', 'single'],
-    'prettier/prettier': ['error', { singleQuote: true, semi: true }],
-    'max-len': [1, { code: 10000 }],
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        semi: true,
+        printWidth: 150,
+      },
+    ],
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
   },

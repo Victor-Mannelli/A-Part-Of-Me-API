@@ -9,15 +9,15 @@ export class AnimelistRepository {
       where: {
         user_id: userId,
       },
-      include: {
-        anime: {
-          select: {
-            coverImage: true,
-            title: true,
-            nextAiringEpisode: true,
-          },
-        },
-      },
+      // include: {
+      //   anime: {
+      //     select: {
+      //       coverImage: true,
+      //       title: true,
+      //       nextAiringEpisode: true,
+      //     },
+      //   },
+      // },
     });
   }
 
