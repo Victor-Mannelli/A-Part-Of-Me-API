@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Controller, Post, Body, HttpCode, HttpStatus, Get, Param, Patch, Delete, Response } from '@nestjs/common';
 import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
 import { UsersService } from './users.service';
@@ -13,8 +12,9 @@ export class UsersController {
     res.status(200).send(response);
   }
   @Get('/all')
-  async findAll() {
-    return await this.usersService.findAll();
+  async findAll(@Response() res) {
+    const response = await this.usersService.findAll(res.locals.user_id);
+    res.status(200).send(response);
   }
 
   @Post('/register')

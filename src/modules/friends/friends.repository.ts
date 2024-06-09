@@ -1,14 +1,9 @@
 import { AcceptFriendRequestDto } from './friends.dto';
-import { PrismaClient } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { prisma } from 'src/utils';
 
 @Injectable()
 export class FriendsRepository {
-  prisma: PrismaClient;
-  constructor() {
-    this.prisma = prisma;
-  }
   async findUserFriends(userId: number) {
     return await prisma.user.findFirst({
       where: {
@@ -28,6 +23,7 @@ export class FriendsRepository {
         },
         friendshipsAsFriend: {
           select: {
+            created_at: true,
             user: {
               select: {
                 user_id: true,
@@ -44,6 +40,18 @@ export class FriendsRepository {
     return await prisma.friendRequest.findMany({
       where: {
         OR: [{ requested_id: userId }, { requester_id: userId }],
+      },
+      select: {
+        friend_request_id: true,
+        requester_id: true,
+        requested_id: true,
+      },
+    });
+  }
+  async getFriendRequestsSentByUser(userId: number) {
+    return await prisma.friendRequest.findMany({
+      where: {
+        requester_id: userId,
       },
       select: {
         friend_request_id: true,
@@ -72,6 +80,13 @@ export class FriendsRepository {
     await prisma.friendRequest.delete({
       where: {
         friend_request_id: acceptFriendRequestDto.friendRequestId,
+      },
+    });
+  }
+  async deleteFriendRequest(friendRequestId: number) {
+    await prisma.friendRequest.delete({
+      where: {
+        friend_request_id: friendRequestId,
       },
     });
   }

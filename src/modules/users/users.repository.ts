@@ -52,11 +52,29 @@ export class UsersRepository {
       },
     });
   }
-  async getUsersList() {
+  async getUsersList(userId: number) {
     return await this.prisma.user.findMany({
       select: {
         user_id: true,
         username: true,
+      },
+      where: {
+        user_id: {
+          not: userId,
+        },
+      },
+    });
+  }
+  async findNewPossibleFriends(excludedUsers: number[]) {
+    return await this.prisma.user.findMany({
+      select: {
+        user_id: true,
+        username: true,
+      },
+      where: {
+        user_id: {
+          notIn: excludedUsers,
+        },
       },
     });
   }

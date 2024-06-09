@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Response } from '@nestjs/common';
+import { Controller, Get, Post, Body, Response, Delete, Param } from '@nestjs/common';
 import { AcceptFriendRequestDto } from './friends.dto';
 import { FriendsService } from './friends.service';
 
@@ -26,17 +26,22 @@ export class FriendsController {
   // remove(@Param('id') id: string) {
   //   return this.friendsService.remove(+id);
   // }
+  // @Delete('/friend:id')
+  // @Delete('/friendRequest/:id')
 
   @Get('/friendList')
   async getFriendList(@Response() res) {
     const response = await this.friendsService.getFriendList(res.locals.user_id);
     res.status(200).send(response);
   }
-  // @Delete('/friend:id')
-  // @Delete('/friendRequest/:id')
   @Get('/friendRequests')
   async getFriendRequests(@Response() res) {
     const response = await this.friendsService.getFriendRequests(res.locals.user_id);
+    res.status(200).send(response);
+  }
+  @Get('/strangersAndFRs')
+  async getStrangersAndFRs(@Response() res) {
+    const response = await this.friendsService.getStrangersAndFRs(res.locals.user_id);
     res.status(200).send(response);
   }
 
@@ -52,5 +57,10 @@ export class FriendsController {
   @Post('/friendRequest/accept')
   async acceptFriendRequest(@Body() acceptFriendRequestDto: AcceptFriendRequestDto) {
     return await this.friendsService.acceptFriendRequest(acceptFriendRequestDto);
+  }
+
+  @Delete('/friendRequest/:friendRequestId')
+  async deleteFriendRequest(@Response() res, @Param('friendRequestId') friendRequestId: string) {
+    return await this.friendsService.deleteFriendRequest(res.locals.user_id, +friendRequestId);
   }
 }

@@ -51,8 +51,8 @@ export class UsersService {
     // return await this.usersRepository.logingUser({ userId, token: uuid() });
   }
 
-  async findAll() {
-    return await this.usersRepository.getUsersList();
+  async findAll(id: number) {
+    return await this.usersRepository.getUsersList(id);
   }
   async findOne(id: number) {
     return await this.usersRepository.findUser(id);
