@@ -1,4 +1,3 @@
-import { AcceptFriendRequestDto } from './friends.dto';
 import { Injectable } from '@nestjs/common';
 import { prisma } from 'src/utils';
 
@@ -70,16 +69,16 @@ export class FriendsRepository {
     });
   }
 
-  async acceptFriendRequest(acceptFriendRequestDto: AcceptFriendRequestDto) {
-    return await prisma.friendship.create({
-      data: {
-        user_id: acceptFriendRequestDto.requesterId,
-        friend_id: acceptFriendRequestDto.requestedId,
+  async acceptFriendRequest(friendRequestId: number) {
+    const newFriendShipData = await prisma.friendRequest.delete({
+      where: {
+        friend_request_id: friendRequestId,
       },
     });
-    await prisma.friendRequest.delete({
-      where: {
-        friend_request_id: acceptFriendRequestDto.friendRequestId,
+    return await prisma.friendship.create({
+      data: {
+        user_id: newFriendShipData.requester_id,
+        friend_id: newFriendShipData.requested_id,
       },
     });
   }

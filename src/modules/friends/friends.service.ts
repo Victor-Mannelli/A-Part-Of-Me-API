@@ -48,6 +48,11 @@ export class FriendsService {
   }
 
   async sendFriendRequests({ userId, friendId }) {
+    const friend = await this.usersRepository.findUser(friendId);
+    if (!friend) {
+      throw new NotFoundException();
+    }
+
     const userFriends = await this.friendsRepository.findUserFriends(userId);
     const friendshipsAsUser = userFriends.friendshipsAsUser.some((friendship) => friendship.friend.user_id === friendId);
     const friendshipsAsFriend = userFriends.friendshipsAsFriend.some((friendship) => friendship.user.user_id === friendId);
@@ -65,12 +70,8 @@ export class FriendsService {
     return await this.friendsRepository.postFriendRequest(userId, friendId);
   }
 
-  async acceptFriendRequest({ friendRequestId, requesterId, requestedId }: { friendRequestId: number; requesterId: string; requestedId: string }) {
-    return await this.friendsRepository.acceptFriendRequest({
-      friendRequestId,
-      requesterId,
-      requestedId,
-    });
+  async acceptFriendRequest(friendRequestId: number) {
+    return await this.friendsRepository.acceptFriendRequest(friendRequestId);
   }
 
   async deleteFriendRequest(userId: string, friendRequestId: number) {

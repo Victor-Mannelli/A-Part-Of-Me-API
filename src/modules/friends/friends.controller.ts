@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Body, Response, Delete, Param } from '@nestjs/common';
-import { AcceptFriendRequestDto } from './friends.dto';
 import { FriendsService } from './friends.service';
 
 @Controller('friends')
@@ -54,9 +53,9 @@ export class FriendsController {
     res.status(200).send(response);
   }
 
-  @Post('/friendRequest/accept')
-  async acceptFriendRequest(@Body() acceptFriendRequestDto: AcceptFriendRequestDto) {
-    return await this.friendsService.acceptFriendRequest(acceptFriendRequestDto);
+  @Post('/friendRequest/accept/:friendRequestId')
+  async acceptFriendRequest(@Param('friendRequestId') friendRequestId: string) {
+    return await this.friendsService.acceptFriendRequest(+friendRequestId);
   }
 
   @Delete('/friendRequest/:friendRequestId')
