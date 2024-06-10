@@ -4,7 +4,7 @@ export class AcceptFriendRequestDto {
   @ApiProperty()
   friendRequestId: number;
   @ApiProperty()
-  requesterId: number;
+  requesterId: string;
   @ApiProperty()
-  requestedId: number;
+  requestedId: string;
 }

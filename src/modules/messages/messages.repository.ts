@@ -9,7 +9,7 @@ export class MessagesRepository {
     this.prisma = prisma;
   }
 
-  async getMessages({ authorId, receiverId }: { authorId: number; receiverId: number }) {
+  async getMessages({ authorId, receiverId }: { authorId: string; receiverId: string }) {
     return await prisma.message.findMany({
       where: {
         OR: [
@@ -40,7 +40,7 @@ export class MessagesRepository {
       },
     });
   }
-  async postMessages({ authorId, receiverId, message }: { authorId: number; receiverId: number; message: string }) {
+  async postMessages({ authorId, receiverId, message }: { authorId: string; receiverId: string; message: string }) {
     return await prisma.message.create({
       data: {
         author_id: authorId,

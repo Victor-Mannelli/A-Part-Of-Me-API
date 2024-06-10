@@ -51,10 +51,10 @@ export class UsersService {
     // return await this.usersRepository.logingUser({ userId, token: uuid() });
   }
 
-  async findAll(id: number) {
+  async findAll(id: string) {
     return await this.usersRepository.getUsersList(id);
   }
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await this.usersRepository.findUser(id);
   }
   async update(updateUserDto: UpdateUserDto) {
@@ -64,7 +64,7 @@ export class UsersService {
       newHashedPassword,
     });
   }
-  async remove(id: number) {
+  async remove(id: string) {
     return await this.usersRepository.deleteAccount(id);
   }
 }

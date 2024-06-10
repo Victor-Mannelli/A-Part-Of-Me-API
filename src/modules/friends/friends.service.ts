@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import { FriendsRepository } from './friends.repository';
 
@@ -24,7 +25,7 @@ export class FriendsService {
   //   return `This action removes a #${id} friend`;
   // }
 
-  async getFriendList(userId: number) {
+  async getFriendList(userId: string) {
     const response = await this.friendsRepository.findUserFriends(userId);
     const friends = [
       ...response.friendshipsAsUser.map((friendship) => friendship.friend),
@@ -33,10 +34,10 @@ export class FriendsService {
 
     return friends;
   }
-  async getFriendRequests(userId: number) {
+  async getFriendRequests(userId: string) {
     return await this.friendsRepository.getFriendRequests(userId);
   }
-  async getStrangersAndFRs(userId: number) {
+  async getStrangersAndFRs(userId: string) {
     const userFriends = await this.getFriendList(userId);
     const userFriendsIds = userFriends.map((user) => user.user_id);
 
@@ -64,19 +65,20 @@ export class FriendsService {
     return await this.friendsRepository.postFriendRequest(userId, friendId);
   }
 
-  async acceptFriendRequest({ friendRequestId, requesterId, requestedId }: { friendRequestId: number; requesterId: number; requestedId: number }) {
-    await this.friendsRepository.acceptFriendRequest({
+  async acceptFriendRequest({ friendRequestId, requesterId, requestedId }: { friendRequestId: number; requesterId: string; requestedId: string }) {
+    return await this.friendsRepository.acceptFriendRequest({
       friendRequestId,
       requesterId,
       requestedId,
     });
   }
 
-  async deleteFriendRequest(userId: number, friendRequestId: number) {
+  async deleteFriendRequest(userId: string, friendRequestId: number) {
     const friendRequests = await this.friendsRepository.getFriendRequestsSentByUser(userId);
     if (!friendRequests.find((fr) => fr.friend_request_id === friendRequestId)) {
-      throw new UnauthorizedException();
+      throw new NotFoundException();
     }
-    return await this.friendsRepository.deleteFriendRequest(friendRequestId);
+    await this.friendsRepository.deleteFriendRequest(friendRequestId);
+    return friendRequests.filter((fr) => fr.friend_request_id !== friendRequestId);
   }
 }

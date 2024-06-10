@@ -1,5 +1,5 @@
 export type UpdateAnimeStatusType = {
-  user_id: number;
+  user_id: string;
   anime_id: number;
   status: string;
   score?: number;

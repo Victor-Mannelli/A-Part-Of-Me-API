@@ -6,19 +6,19 @@ import { Injectable } from '@nestjs/common';
 export class AnimelistService {
   constructor(readonly animelistRepository: AnimelistRepository) {}
 
-  async findOne(userId: number) {
+  async findOne(userId: string) {
     return await this.animelistRepository.findOne(userId);
   }
 
-  async findFollowedAnimes(userId: number) {
+  async findFollowedAnimes(userId: string) {
     return await this.animelistRepository.findFollowedAnimes(userId);
   }
 
-  async populateUserAnimelist(userAnimeStatus: UserAnimeStatusDto & { user_id: number }) {
+  async populateUserAnimelist(userAnimeStatus: UserAnimeStatusDto & { user_id: string }) {
     return await this.animelistRepository.upsertUsersAnimesStatus(userAnimeStatus);
   }
 
-  async updateUserProgress({ userId, animeId, progress }: { userId: number; animeId: number; progress: number }) {
+  async updateUserProgress({ userId, animeId, progress }: { userId: string; animeId: number; progress: number }) {
     return await this.animelistRepository.patchUserProgress({
       userId,
       animeId,
@@ -26,7 +26,7 @@ export class AnimelistService {
     });
   }
 
-  async remove({ userId, animeId }: { userId: number; animeId: number }) {
+  async remove({ userId, animeId }: { userId: string; animeId: number }) {
     return await this.animelistRepository.deleteAnimeFromList({
       userId,
       animeId,

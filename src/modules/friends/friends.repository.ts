@@ -4,7 +4,7 @@ import { prisma } from 'src/utils';
 
 @Injectable()
 export class FriendsRepository {
-  async findUserFriends(userId: number) {
+  async findUserFriends(userId: string) {
     return await prisma.user.findFirst({
       where: {
         user_id: userId,
@@ -36,7 +36,7 @@ export class FriendsRepository {
     });
   }
 
-  async getFriendRequests(userId: number) {
+  async getFriendRequests(userId: string) {
     return await prisma.friendRequest.findMany({
       where: {
         OR: [{ requested_id: userId }, { requester_id: userId }],
@@ -48,7 +48,7 @@ export class FriendsRepository {
       },
     });
   }
-  async getFriendRequestsSentByUser(userId: number) {
+  async getFriendRequestsSentByUser(userId: string) {
     return await prisma.friendRequest.findMany({
       where: {
         requester_id: userId,
@@ -61,7 +61,7 @@ export class FriendsRepository {
     });
   }
 
-  async postFriendRequest(userId: number, friendId: number) {
+  async postFriendRequest(userId: string, friendId: string) {
     return await prisma.friendRequest.create({
       data: {
         requester_id: userId,
@@ -71,7 +71,7 @@ export class FriendsRepository {
   }
 
   async acceptFriendRequest(acceptFriendRequestDto: AcceptFriendRequestDto) {
-    await prisma.friendship.create({
+    return await prisma.friendship.create({
       data: {
         user_id: acceptFriendRequestDto.requesterId,
         friend_id: acceptFriendRequestDto.requestedId,
@@ -84,7 +84,7 @@ export class FriendsRepository {
     });
   }
   async deleteFriendRequest(friendRequestId: number) {
-    await prisma.friendRequest.delete({
+    return await prisma.friendRequest.delete({
       where: {
         friend_request_id: friendRequestId,
       },

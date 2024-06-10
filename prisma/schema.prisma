@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  user_id                Int             @id @default(autoincrement())
+  user_id                String             @id @default(uuid())
   email                  String          @unique
   password               String
   username               String
@@ -25,8 +25,8 @@ model User {
 
 model FriendRequest {
   friend_request_id Int      @id @default(autoincrement())
-  requester_id      Int
-  requested_id      Int
+  requester_id      String
+  requested_id      String
   created_at        DateTime @default(now())
   requested         User     @relation("ReceivedFriendRequests", fields: [requested_id], references: [user_id], onDelete: Cascade)
   requester         User     @relation("SentFriendRequests", fields: [requester_id], references: [user_id], onDelete: Cascade)
@@ -36,8 +36,8 @@ model FriendRequest {
 
 model Friendship {
   friendship_id Int      @id @default(autoincrement())
-  user_id       Int
-  friend_id     Int
+  user_id       String
+  friend_id     String
   created_at    DateTime @default(now())
   friend        User     @relation("FriendshipsAsFriend", fields: [friend_id], references: [user_id], onDelete: Cascade)
   user          User     @relation("FriendshipsAsUser", fields: [user_id], references: [user_id], onDelete: Cascade)
@@ -48,8 +48,8 @@ model Friendship {
 model Message {
   message_id  Int      @id @default(autoincrement())
   message     String
-  author_id   Int
-  receiver_id Int
+  author_id   String
+  receiver_id String
   created_at  DateTime @default(now())
   author      User     @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
   receiver    User     @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
@@ -59,7 +59,7 @@ model Message {
 
 model UserAnimeList {
   id          Int     @id @default(autoincrement())
-  user_id     Int     
+  user_id     String     
   user        User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   anime_id    Int    
   status      String

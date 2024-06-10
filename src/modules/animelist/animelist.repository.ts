@@ -4,7 +4,7 @@ import { prisma } from 'src/utils';
 
 @Injectable()
 export class AnimelistRepository {
-  async findOne(userId: number) {
+  async findOne(userId: string) {
     return await prisma.userAnimeList.findMany({
       where: {
         user_id: userId,
@@ -12,7 +12,7 @@ export class AnimelistRepository {
     });
   }
 
-  async findFollowedAnimes(userId: number) {
+  async findFollowedAnimes(userId: string) {
     return await prisma.userAnimeList.findMany({
       where: {
         user_id: userId,
@@ -43,7 +43,7 @@ export class AnimelistRepository {
     });
   }
 
-  async patchUserProgress({ userId, animeId, progress }: { userId: number; animeId: number; progress: number }) {
+  async patchUserProgress({ userId, animeId, progress }: { userId: string; animeId: number; progress: number }) {
     return await prisma.userAnimeList.update({
       where: {
         user_id_anime_id: {
@@ -57,7 +57,7 @@ export class AnimelistRepository {
     });
   }
 
-  async deleteAnimeFromList({ userId, animeId }: { userId: number; animeId: number }) {
+  async deleteAnimeFromList({ userId, animeId }: { userId: string; animeId: number }) {
     await prisma.userAnimeList.delete({
       where: {
         user_id_anime_id: {

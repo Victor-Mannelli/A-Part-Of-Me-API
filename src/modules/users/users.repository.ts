@@ -23,7 +23,7 @@ export class UsersRepository {
       },
     });
   }
-  async findUserById(userId: number) {
+  async findUserById(userId: string) {
     return await this.prisma.user.findFirst({
       where: {
         user_id: userId,
@@ -41,7 +41,7 @@ export class UsersRepository {
     });
   }
 
-  async findUser(userId: number) {
+  async findUser(userId: string) {
     return await this.prisma.user.findFirst({
       where: {
         user_id: userId,
@@ -52,7 +52,7 @@ export class UsersRepository {
       },
     });
   }
-  async getUsersList(userId: number) {
+  async getUsersList(userId: string) {
     return await this.prisma.user.findMany({
       select: {
         user_id: true,
@@ -65,7 +65,7 @@ export class UsersRepository {
       },
     });
   }
-  async findNewPossibleFriends(excludedUsers: number[]) {
+  async findNewPossibleFriends(excludedUsers: string[]) {
     return await this.prisma.user.findMany({
       select: {
         user_id: true,
@@ -89,7 +89,7 @@ export class UsersRepository {
       },
     });
   }
-  async deleteAccount(userId: number) {
+  async deleteAccount(userId: string) {
     await this.prisma.user.delete({
       where: {
         user_id: userId,

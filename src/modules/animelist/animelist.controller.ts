@@ -33,20 +33,20 @@ export class AnimelistController {
   @Patch(':id')
   async update(@Response() res, @Param('id') id: string, @Body() { progress }: { progress: number }) {
     z.number().parse(progress);
-    await this.animelistService.updateUserProgress({
-      userId: +res.locals.user_id,
+    const response = await this.animelistService.updateUserProgress({
+      userId: res.locals.user_id,
       animeId: +id,
       progress,
     });
-    res.sendStatus(200);
+    res.status(200).send(response);
   }
 
   @Delete(':id')
   async remove(@Response() res, @Param('id') id: string) {
-    await this.animelistService.remove({
-      userId: +res.locals.user_id,
+    const response = await this.animelistService.remove({
+      userId: res.locals.user_id,
       animeId: +id,
     });
-    res.sendStatus(200);
+    res.status(200).send(response);
   }
 }

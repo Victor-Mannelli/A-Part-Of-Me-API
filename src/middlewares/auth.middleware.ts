@@ -19,7 +19,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     const user = await prisma.user.findFirst({
       where: {
-        user_id: Number(jwtPayload.user_id),
+        user_id: jwtPayload.user_id,
       },
     });
     if (!user) throw new NotAcceptableException();

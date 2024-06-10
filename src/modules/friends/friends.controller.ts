@@ -61,6 +61,7 @@ export class FriendsController {
 
   @Delete('/friendRequest/:friendRequestId')
   async deleteFriendRequest(@Response() res, @Param('friendRequestId') friendRequestId: string) {
-    return await this.friendsService.deleteFriendRequest(res.locals.user_id, +friendRequestId);
+    const response = await this.friendsService.deleteFriendRequest(res.locals.user_id, +friendRequestId);
+    res.status(200).send(response);
   }
 }

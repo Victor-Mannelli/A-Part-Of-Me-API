@@ -14,12 +14,12 @@ export type LoginBody = {
   password: string;
 };
 export type Login = {
-  userId: number;
+  userId: string;
   token: string;
 };
 
 export type ChangePasswordBody = {
-  userId: number;
+  userId: string;
   newPassword: string;
 };
 
