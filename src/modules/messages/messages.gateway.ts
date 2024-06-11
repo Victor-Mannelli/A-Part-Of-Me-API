@@ -1,9 +1,11 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server } from 'socket.io';
 
-@WebSocketGateway(8001, { cors: '*' })
-export class FriendsChatGateway {
+@WebSocketGateway(8080, { cors: '*' })
+export class MessagesGateway {
   @WebSocketServer()
-  server;
+  server: Server;
+
   @SubscribeMessage('message')
   handleMessage(@MessageBody() message: string): void {
     console.log(message);

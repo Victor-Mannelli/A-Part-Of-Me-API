@@ -7,7 +7,6 @@ import { FriendsModule } from './modules/friends/friends.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { FriendsChatGateway } from './modules/friends_chat/friends_chat.gateway';
 
 @Module({
   imports: [UsersModule, FriendsModule, MessagesModule, AnimelistModule, FriendshipModule],
@@ -17,7 +16,6 @@ import { FriendsChatGateway } from './modules/friends_chat/friends_chat.gateway'
       provide: APP_INTERCEPTOR,
       useClass: ZodErrorsInterceptor,
     },
-    FriendsChatGateway,
   ],
 })
 export class AppModule {
