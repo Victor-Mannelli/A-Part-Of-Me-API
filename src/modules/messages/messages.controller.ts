@@ -1,5 +1,5 @@
-// eslint-disable-next-line prettier/prettier
-import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus, Response } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 
 @Controller('messages')
@@ -23,32 +23,28 @@ export class MessagesController {
   //   return this.messagesService.update(+id, updateMessageDto);
   // }
 
-  @Get(':id')
-  async find() {
-    // return await this.messagesService.getMessages({
-    //   // authorId: Number(req.params.authorId),
-    //   // receiverId: res.locals.user.user_id
-    //   authorId: "",
-    //   receiverId: "",
-    // });
+  @Get(':authorId')
+  async findAllFromChat(@Response() res, @Param('authorId') author_id: string) {
+    const response = await this.messagesService.getMessages({
+      author_id,
+      receiver_id: res.locals.user_id,
+    });
+    res.status(200).send(response);
   }
 
-  @Post(':id')
-  @HttpCode(HttpStatus.CREATED)
-  async post(@Body() message: string) {
-    return message;
-    // return await this.messagesService.postMessage({
-    //   // authorId: res.locals.user.user_id,
-    //   // receiverId: Number(req.params.receiverId),
-    //   authorId: "",
-    //   receiverId: "",
-    //   message,
-    // });
+  // @HttpCode(HttpStatus.CREATED)
+  @Post(':receiverId')
+  async post(@Response() res, @Body() Body: { message: string }, @Param('receiverId') receiver_id: string) {
+    const response = await this.messagesService.postMessage({
+      author_id: res.locals.user_id,
+      receiver_id,
+      message: Body.message,
+    });
+    res.status(201).send(response);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return id;
-    // return this.messagesService.remove(+id);
+    return await this.messagesService.remove(+id);
   }
 }
