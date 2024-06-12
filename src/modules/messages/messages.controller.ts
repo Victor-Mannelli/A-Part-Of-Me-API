@@ -45,6 +45,6 @@ export class MessagesController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.messagesService.remove(+id);
+    return await this.messagesService.remove(id);
   }
 }

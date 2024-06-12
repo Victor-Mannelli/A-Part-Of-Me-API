@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  user_id                String             @id @default(uuid())
+  user_id                String          @id @default(uuid())
   email                  String          @unique
   password               String
   username               String
@@ -46,22 +46,22 @@ model Friendship {
 }
 
 model Message {
-  message_id  Int      @id @default(autoincrement())
+  message_id  String @id @unique
   message     String
   author_id   String
   receiver_id String
-  created_at  DateTime @default(now())
-  author      User     @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
-  receiver    User     @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
+  created_at  String
+  author      User   @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
+  receiver    User   @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
 
   @@map("messages")
 }
 
 model UserAnimeList {
   id          Int     @id @default(autoincrement())
-  user_id     String     
+  user_id     String
   user        User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  anime_id    Int    
+  anime_id    Int
   status      String
   score       Int     @default(0)
   progress    Int     @default(0)

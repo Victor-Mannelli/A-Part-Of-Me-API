@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MessagesRepository } from './messages.repository';
 import { UsersRepository } from '../users/users.repository';
+import { MessagesRepository } from './messages.repository';
+import { MessageType } from 'src/utils/types/messages';
 
 @Injectable()
 export class MessagesService {
@@ -9,15 +10,6 @@ export class MessagesService {
     readonly usersRepository: UsersRepository,
   ) {}
 
-  // findAll() {
-  //   return `This action returns all messages`;
-  // }
-  // findOne(id: number) {
-  //   return `This action returns a #${id} message`;
-  // }
-  // update(id: number, updateMessageDto: UpdateMessageDto) {
-  //   return `This action updates a #${id} message`;
-  // }
   async getMessages({ author_id, receiver_id }: { author_id: string; receiver_id: string }) {
     const validReceiver = await this.usersRepository.findUserById(author_id);
     if (!validReceiver) throw new NotFoundException();
@@ -29,7 +21,12 @@ export class MessagesService {
     if (!validReceiver) throw new NotFoundException();
     return await this.messagesRepository.postMessages({ author_id, receiver_id, message });
   }
-  async remove(id: number) {
+
+  async postMessages({ messages }: { messages: MessageType[] }) {
+    await this.messagesRepository.postManyMessages(messages);
+  }
+
+  async remove(id: string) {
     return await this.messagesRepository.delete(id);
   }
 }

@@ -1,4 +1,6 @@
+import { MessageType } from 'src/utils/types/messages';
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { prisma } from 'src/utils';
 
 @Injectable()
@@ -37,9 +39,11 @@ export class MessagesRepository {
   async postMessages({ author_id, receiver_id, message }: { author_id: string; receiver_id: string; message: string }) {
     return await prisma.message.create({
       data: {
+        message_id: uuidv4(),
         author_id,
         receiver_id,
         message,
+        created_at: Date.now().toString(),
       },
       select: {
         message_id: true,
@@ -53,7 +57,14 @@ export class MessagesRepository {
       },
     });
   }
-  async delete(id: number) {
+
+  async postManyMessages(messages: MessageType[]) {
+    return await prisma.message.createMany({
+      data: messages,
+    });
+  }
+
+  async delete(id: string) {
     return await prisma.message.delete({
       where: {
         message_id: id,
