@@ -23,7 +23,6 @@ export class AuthMiddleware implements NestMiddleware {
       },
     });
     if (!user) throw new NotAcceptableException();
-
     res.locals.user_id = jwtPayload.user_id;
     next();
   }

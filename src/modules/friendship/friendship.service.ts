@@ -10,9 +10,9 @@ export class FriendshipService {
     const parsedResponse = response.map((e) => {
       return {
         friendship_id: e.friendship_id,
-        user_id: e.friend_id,
-        username: e.friend.username,
-        avatar: e.friend.avatar,
+        user_id: e.friend_id === userId ? e.user_id : e.friend_id,
+        username: e.friend_id === userId ? e.user.username : e.friend.username,
+        avatar: e.friend_id === userId ? e.user.avatar : e.friend.avatar,
       };
     });
     return parsedResponse;
