@@ -16,6 +16,11 @@ export class UsersController {
     const response = await this.usersService.findAll(res.locals.user_id);
     res.status(200).send(response);
   }
+  @Get('/strangersAndFRs')
+  async getStrangersAndFRs(@Response() res) {
+    const response = await this.usersService.getStrangersAndFRs(res.locals.user_id);
+    res.status(200).send(response);
+  }
 
   @Post('/register')
   @HttpCode(HttpStatus.CREATED)

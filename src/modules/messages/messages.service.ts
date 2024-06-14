@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import { MessagesRepository } from './messages.repository';
-import { MessageType } from 'src/utils/types/messages';
+import { MessageType } from './messages.type';
 
 @Injectable()
 export class MessagesService {

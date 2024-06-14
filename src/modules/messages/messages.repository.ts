@@ -1,4 +1,4 @@
-import { MessageType } from 'src/utils/types/messages';
+import { MessageType } from './messages.type';
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { prisma } from 'src/utils';

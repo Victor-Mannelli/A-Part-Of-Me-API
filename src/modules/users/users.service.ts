@@ -1,4 +1,6 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotAcceptableException, UnauthorizedException } from '@nestjs/common';
+import { FriendRequestRepository } from '../friend_request/friend_request.repository';
+import { FriendshipRepository } from '../friendship/friendship.repository';
 import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
 import { CreateUserSchema, LoginSchema } from './users.schema';
 import { UsersRepository } from './users.repository';
@@ -8,7 +10,11 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(readonly usersRepository: UsersRepository) {}
+  constructor(
+    readonly usersRepository: UsersRepository,
+    readonly friendRequestRepository: FriendRequestRepository,
+    readonly friendshipRepository: FriendshipRepository,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     CreateUserSchema.parse(createUserDto);
@@ -57,6 +63,21 @@ export class UsersService {
   async findOne(id: string) {
     return await this.usersRepository.findUser(id);
   }
+
+  async getStrangersAndFRs(userId: string) {
+    try {
+      const userFriends = await this.friendshipRepository.getFriendList(userId);
+      const userFriendsIds = userFriends.map((user) => user.user_id);
+
+      const strangers = await this.usersRepository.findNewPossibleFriends([...userFriendsIds, userId]);
+      const FRs = await this.friendRequestRepository.getFriendRequests(userId);
+
+      return { strangers: [...strangers], friendRequests: [...FRs] };
+    } catch (error) {
+      throw new NotAcceptableException();
+    }
+  }
+
   async update(updateUserDto: UpdateUserDto) {
     const newHashedPassword = bcrypt.hashSync(updateUserDto.newPassword, 10);
     return await this.usersRepository.changePassword({

@@ -2,55 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { prisma } from 'src/utils';
 
 @Injectable()
-export class FriendsRepository {
-  async findUserFriends(userId: string) {
-    return await prisma.user.findFirst({
-      where: {
-        user_id: userId,
-      },
-      select: {
-        friendshipsAsUser: {
-          select: {
-            created_at: true,
-            friend: {
-              select: {
-                user_id: true,
-                username: true,
-              },
-            },
-          },
-        },
-        friendshipsAsFriend: {
-          select: {
-            created_at: true,
-            user: {
-              select: {
-                user_id: true,
-                username: true,
-              },
-            },
-          },
-        },
-      },
-    });
-  }
-
+export class FriendRequestRepository {
   async getFriendRequests(userId: string) {
     return await prisma.friendRequest.findMany({
       where: {
         OR: [{ requested_id: userId }, { requester_id: userId }],
-      },
-      select: {
-        friend_request_id: true,
-        requester_id: true,
-        requested_id: true,
-      },
-    });
-  }
-  async getFriendRequestsSentByUser(userId: string) {
-    return await prisma.friendRequest.findMany({
-      where: {
-        requester_id: userId,
       },
       select: {
         friend_request_id: true,
@@ -68,7 +24,6 @@ export class FriendsRepository {
       },
     });
   }
-
   async acceptFriendRequest(friendRequestId: number) {
     const newFriendShipData = await prisma.friendRequest.delete({
       where: {
@@ -82,6 +37,20 @@ export class FriendsRepository {
       },
     });
   }
+
+  async getFriendRequestsSentByUser(userId: string) {
+    return await prisma.friendRequest.findMany({
+      where: {
+        requester_id: userId,
+      },
+      select: {
+        friend_request_id: true,
+        requester_id: true,
+        requested_id: true,
+      },
+    });
+  }
+
   async deleteFriendRequest(friendRequestId: number) {
     return await prisma.friendRequest.delete({
       where: {

@@ -1,6 +1,7 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
-import { MessageType } from 'src/utils/types/messages';
 import { MessagesService } from './messages.service';
+import { MessageSchema } from './messages.schema';
+import { MessageType } from './messages.type';
 import { Injectable } from '@nestjs/common';
 import { Server } from 'socket.io';
 import Bottleneck from 'bottleneck';
@@ -58,6 +59,7 @@ export class MessagesGateway {
 
   @SubscribeMessage('message')
   handleMessage(@MessageBody() message: MessageType): void {
+    MessageSchema.parse(message);
     this.server.emit('message', message);
 
     this.messagesCache.push({

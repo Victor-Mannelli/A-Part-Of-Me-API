@@ -5,15 +5,11 @@ import { Injectable } from '@nestjs/common';
 export class FriendshipService {
   constructor(readonly friendshipRepository: FriendshipRepository) {}
 
-  async findOne(id: number) {
-    return await this.friendshipRepository.findOne(id);
+  async getFriendList(userId: string) {
+    return await this.friendshipRepository.getFriendList(userId);
   }
 
-  // update(id: number, updateFriendshipDto: UpdateFriendshipDto) {
-  //   return `This action updates a #${id} friendship`;
-  // }
-
-  async remove(id: number) {
-    return await this.friendshipRepository.delete(id);
+  async removeFriend(friendship_id: number) {
+    return await this.friendshipRepository.delete(friendship_id);
   }
 }
