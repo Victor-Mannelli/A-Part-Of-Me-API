@@ -20,12 +20,13 @@ export class FriendRequestController {
   }
 
   @Post('/accept/:id')
-  async acceptFriendRequest(@Param('id') id: string) {
-    return await this.friendRequestService.acceptFriendRequest(+id);
+  async acceptFriendRequest(@Response() res, @Param('id') id: string) {
+    const response = await this.friendRequestService.acceptFriendRequest(res.locals.user_id, +id);
+    res.status(200).send(response);
   }
 
   @Delete(':friendRequestId')
-  async deleteFriendRequest(@Response() res, @Param('friendRequestId') friendRequestId: number) {
+  async deleteFriendRequest(@Response() res, @Param('friendRequestId') friendRequestId: string) {
     const response = await this.friendRequestService.deleteFriendRequest(res.locals.user_id, +friendRequestId);
     res.status(200).send(response);
   }

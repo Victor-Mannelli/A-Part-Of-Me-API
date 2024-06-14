@@ -6,10 +6,9 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  async findOne(@Response() res) {
-    const response = await this.usersService.findOne(res.locals.user_id);
-    res.status(200).send(response);
+  @Get('/find/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.usersService.findOne(id);
   }
   @Get('/all')
   async findAll(@Response() res) {

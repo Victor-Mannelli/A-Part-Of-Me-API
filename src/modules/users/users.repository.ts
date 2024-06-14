@@ -10,7 +10,7 @@ export class UsersRepository {
     this.prisma = prisma;
   }
   async checkEmail(email: string) {
-    return await this.prisma.user.findFirst({
+    return await this.prisma.user.findUnique({
       where: {
         email,
       },
@@ -24,7 +24,7 @@ export class UsersRepository {
     });
   }
   async findUserById(userId: string) {
-    return await this.prisma.user.findFirst({
+    return await this.prisma.user.findUnique({
       where: {
         user_id: userId,
       },
@@ -42,13 +42,14 @@ export class UsersRepository {
   }
 
   async findUser(userId: string) {
-    return await this.prisma.user.findFirst({
+    return await this.prisma.user.findUnique({
       where: {
         user_id: userId,
       },
       select: {
         username: true,
         user_id: true,
+        avatar: true,
       },
     });
   }
@@ -57,6 +58,7 @@ export class UsersRepository {
       select: {
         user_id: true,
         username: true,
+        avatar: true,
       },
       where: {
         user_id: {
@@ -70,6 +72,7 @@ export class UsersRepository {
       select: {
         user_id: true,
         username: true,
+        avatar: true,
       },
       where: {
         user_id: {

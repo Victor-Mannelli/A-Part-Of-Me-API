@@ -11,7 +11,8 @@ model User {
   user_id                String          @id @default(uuid())
   email                  String          @unique
   password               String
-  username               String
+  username               String          @unique
+  avatar                 String?
   receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
   sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
   friendshipsAsFriend    Friendship[]    @relation("FriendshipsAsFriend")
@@ -35,7 +36,7 @@ model FriendRequest {
 }
 
 model Friendship {
-  friendship_id Int      @id @default(autoincrement())
+  friendship_id String   @id @default(uuid())
   user_id       String
   friend_id     String
   created_at    DateTime @default(now())

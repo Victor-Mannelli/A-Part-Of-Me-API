@@ -13,6 +13,6 @@ export class FriendshipController {
 
   @Delete(':id')
   removeFriend(@Param('id') id: string) {
-    return this.friendshipService.removeFriend(+id);
+    return this.friendshipService.removeFriend(id);
   }
 }

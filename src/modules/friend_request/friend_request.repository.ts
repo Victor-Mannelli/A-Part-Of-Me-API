@@ -12,6 +12,20 @@ export class FriendRequestRepository {
         friend_request_id: true,
         requester_id: true,
         requested_id: true,
+        requester: true,
+      },
+    });
+  }
+  async getReceivedFRs(userId: string) {
+    return await prisma.friendRequest.findMany({
+      where: {
+        requested_id: userId,
+      },
+      select: {
+        friend_request_id: true,
+        requester_id: true,
+        requested_id: true,
+        requester: true,
       },
     });
   }

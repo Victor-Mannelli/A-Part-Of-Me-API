@@ -1,13 +1,13 @@
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { MessageSchema } from './messages.schema';
 import { MessageType } from './messages.type';
-import { Injectable } from '@nestjs/common';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import Bottleneck from 'bottleneck';
 
 @Injectable()
-@WebSocketGateway(8080, { cors: '*' })
+@WebSocketGateway(8080, { namespace: '/messages', cors: true })
 export class MessagesGateway {
   constructor(readonly messagesService: MessagesService) {}
 
@@ -18,7 +18,6 @@ export class MessagesGateway {
     maxConcurrent: 5, // maximum number of concurrent executions
     minTime: 200, // minimum time between executions
   });
-
   private setupTimeout(): void {
     if (this.timeoutHandle) {
       clearTimeout(this.timeoutHandle);
@@ -31,7 +30,6 @@ export class MessagesGateway {
       1000 * 60 * 5,
     );
   }
-
   private async sendMessagesToDatabase(): Promise<void> {
     if (this.lock) return;
     this.lock = true;
@@ -57,17 +55,34 @@ export class MessagesGateway {
   @WebSocketServer()
   server: Server;
 
+  @SubscribeMessage('joinRoom')
+  handleJoinRoom(@MessageBody() room: string, @ConnectedSocket() client: Socket): void {
+    client.join(room);
+    client.emit('joinedRoom', room);
+  }
+
+  @SubscribeMessage('leaveRoom')
+  handleLeaveRoom(@MessageBody() room: string, @ConnectedSocket() client: Socket): void {
+    client.leave(room);
+    client.emit('leftRoom', room);
+  }
+
   @SubscribeMessage('message')
-  handleMessage(@MessageBody() message: MessageType): void {
-    MessageSchema.parse(message);
-    this.server.emit('message', message);
+  handleMessage(@MessageBody() messageBody: { room: string; message: MessageType }, @ConnectedSocket() client: Socket): void {
+    try {
+      MessageSchema.parse(messageBody.message);
+    } catch (error) {
+      throw new UnprocessableEntityException();
+    }
+
+    this.server.to(messageBody.room).emit('message', { message: messageBody.message, sender: client.id });
 
     this.messagesCache.push({
-      message_id: message.message_id,
-      message: message.message,
-      author_id: message.author_id,
-      receiver_id: message.receiver_id,
-      created_at: message.created_at,
+      message_id: messageBody.message.message_id,
+      message: messageBody.message.message,
+      author_id: messageBody.message.author_id,
+      receiver_id: messageBody.message.receiver_id,
+      created_at: messageBody.message.created_at,
     });
 
     if (this.messagesCache.length === 1) {

@@ -51,10 +51,9 @@ export class UsersService {
       user_id: user.user_id.toString(),
       email: user.email,
       username: user.username,
-      // avatar: user.avatar,
+      avatar: user.avatar,
     };
     return { token: jwt.sign(newJwt, process.env.JWT_SECRET) };
-    // return await this.usersRepository.logingUser({ userId, token: uuid() });
   }
 
   async findAll(id: string) {
@@ -67,8 +66,13 @@ export class UsersService {
   async getStrangersAndFRs(userId: string) {
     try {
       const userFriends = await this.friendshipRepository.getFriendList(userId);
-      const userFriendsIds = userFriends.map((user) => user.user_id);
-
+      const userFriendsIds = userFriends.map((user) => {
+        if (user.friend_id !== userId) {
+          return user.friend_id;
+        } else {
+          return user.user_id;
+        }
+      });
       const strangers = await this.usersRepository.findNewPossibleFriends([...userFriendsIds, userId]);
       const FRs = await this.friendRequestRepository.getFriendRequests(userId);
 

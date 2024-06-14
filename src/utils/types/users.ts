@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export type RegistrationBody = {
   email: string;
   username: string;
@@ -31,5 +30,5 @@ export type JwtPayload = {
   user_id: string;
   username: string;
   email: string;
-  // avatar: string;
+  avatar: string;
 };

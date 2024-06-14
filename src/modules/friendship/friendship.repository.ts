@@ -16,9 +16,25 @@ export class FriendshipRepository {
       where: {
         OR: [{ friend_id: userId }, { user_id: userId }],
       },
+      include: {
+        friend: {
+          select: {
+            user_id: true,
+            username: true,
+            avatar: true,
+          },
+        },
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            avatar: true,
+          },
+        },
+      },
     });
   }
-  async delete(id: number) {
+  async delete(id: string) {
     return await prisma.friendship.delete({
       where: {
         friendship_id: id,
