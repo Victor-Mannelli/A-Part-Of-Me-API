@@ -52,6 +52,7 @@ model Message {
   message     String
   author_id   String
   receiver_id String
+  room_id     String @unique
   created_at  String
   author      User   @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
   receiver    User   @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)

@@ -5,43 +5,57 @@ import { prisma } from 'src/utils';
 
 @Injectable()
 export class MessagesRepository {
-  async getMessages({ author_id, receiver_id }: { author_id: string; receiver_id: string }) {
+  async getMessages({ room_id }: { room_id: string }) {
     return await prisma.message.findMany({
       where: {
-        OR: [
-          {
-            author_id,
-            receiver_id,
-          },
-          {
-            author_id: receiver_id,
-            receiver_id: author_id,
-          },
-        ],
-      },
-      orderBy: {
-        created_at: 'asc',
+        room_id,
       },
       include: {
         author: {
           select: {
             username: true,
-          },
-        },
-        receiver: {
-          select: {
-            username: true,
+            avatar: true,
           },
         },
       },
     });
+    // return await prisma.message.findMany({
+    //   where: {
+    //     OR: [
+    //       {
+    //         author_id,
+    //         receiver_id,
+    //       },
+    //       {
+    //         author_id: receiver_id,
+    //         receiver_id: author_id,
+    //       },
+    //     ],
+    //   },
+    //   orderBy: {
+    //     created_at: 'asc',
+    //   },
+    //   include: {
+    //     author: {
+    //       select: {
+    //         username: true,
+    //       },
+    //     },
+    //     receiver: {
+    //       select: {
+    //         username: true,
+    //       },
+    //     },
+    //   },
+    // });
   }
-  async postMessages({ author_id, receiver_id, message }: { author_id: string; receiver_id: string; message: string }) {
+  async postMessages({ author_id, receiver_id, message, room_id }: { author_id: string; receiver_id: string; message: string; room_id: string }) {
     return await prisma.message.create({
       data: {
         message_id: uuidv4(),
         author_id,
         receiver_id,
+        room_id,
         message,
         created_at: Date.now().toString(),
       },

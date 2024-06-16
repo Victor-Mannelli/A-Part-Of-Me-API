@@ -1,6 +1,7 @@
 export type MessageType = {
   message_id: string;
   message: string;
+  room_id: string;
   author_id: string;
   author?: {
     username: string;

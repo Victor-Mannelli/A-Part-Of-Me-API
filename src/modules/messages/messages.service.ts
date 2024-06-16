@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import { MessagesRepository } from './messages.repository';
 import { MessageType } from './messages.type';
@@ -10,16 +10,27 @@ export class MessagesService {
     readonly usersRepository: UsersRepository,
   ) {}
 
-  async getMessages({ author_id, receiver_id }: { author_id: string; receiver_id: string }) {
-    const validReceiver = await this.usersRepository.findUserById(author_id);
-    if (!validReceiver) throw new NotFoundException();
-    return await this.messagesRepository.getMessages({ author_id, receiver_id });
+  async getMessages({ user_id, room_id }: { user_id: string; room_id: string }) {
+    const messages = await this.messagesRepository.getMessages({ room_id });
+    if (messages.length === 0) return [];
+    if (messages[0].author_id !== user_id && messages[0].receiver_id !== user_id) {
+      throw new UnauthorizedException();
+    }
+    const parsedMessages = messages.map((message) => {
+      return {
+        message_id: message.message_id,
+        message: message.message,
+        author: message.author,
+        created_at: message.created_at,
+      };
+    });
+    return parsedMessages;
   }
 
-  async postMessage({ author_id, receiver_id, message }: { author_id: string; receiver_id: string; message: string }) {
+  async postMessage({ author_id, receiver_id, message, room_id }: { author_id: string; receiver_id: string; message: string; room_id: string }) {
     const validReceiver = await this.usersRepository.findUserById(receiver_id);
     if (!validReceiver) throw new NotFoundException();
-    return await this.messagesRepository.postMessages({ author_id, receiver_id, message });
+    return await this.messagesRepository.postMessages({ author_id, receiver_id, message, room_id });
   }
 
   async postMessages({ messages }: { messages: MessageType[] }) {

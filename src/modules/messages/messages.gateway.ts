@@ -74,7 +74,6 @@ export class MessagesGateway {
     } catch (error) {
       throw new UnprocessableEntityException();
     }
-
     this.server.to(messageBody.room).emit('message', { message: messageBody.message, sender: client.id });
 
     this.messagesCache.push({
@@ -83,6 +82,7 @@ export class MessagesGateway {
       author_id: messageBody.message.author_id,
       receiver_id: messageBody.message.receiver_id,
       created_at: messageBody.message.created_at,
+      room_id: messageBody.room,
     });
 
     if (this.messagesCache.length === 1) {
