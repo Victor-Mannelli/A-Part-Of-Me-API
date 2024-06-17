@@ -29,6 +29,19 @@ export class FriendRequestRepository {
       },
     });
   }
+  async getSentFRs(userId: string) {
+    return await prisma.friendRequest.findMany({
+      where: {
+        requester_id: userId,
+      },
+      select: {
+        friend_request_id: true,
+        requester_id: true,
+        requested_id: true,
+        requester: true,
+      },
+    });
+  }
 
   async postFriendRequest(userId: string, friendId: string) {
     return await prisma.friendRequest.create({
@@ -55,6 +68,9 @@ export class FriendRequestRepository {
         user_id: newFriendShipData.requester_id,
         friend_id: newFriendShipData.requested_id,
       },
+      include: {
+        user: true,
+      },
     });
   }
 
@@ -75,6 +91,9 @@ export class FriendRequestRepository {
     return await prisma.friendRequest.delete({
       where: {
         friend_request_id: friendRequestId,
+      },
+      select: {
+        friend_request_id: true,
       },
     });
   }

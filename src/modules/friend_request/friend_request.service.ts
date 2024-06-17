@@ -1,5 +1,5 @@
 import { FriendRequestRepository } from './friend_request.repository';
-import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
@@ -42,6 +42,10 @@ export class FriendRequestService {
   }
   async sendFriendRequests({ userId, friendId }) {
     try {
+      const FRs = await this.friendRequestRepository.getSentFRs(userId);
+      if (FRs.some((Fr) => Fr.requested_id === friendId)) {
+        throw new ConflictException();
+      }
       const response = await this.friendRequestRepository.postFriendRequest(userId, friendId);
       const parsedResponse = {
         friend_request_id: response.friend_request_id,
@@ -62,8 +66,15 @@ export class FriendRequestService {
   async acceptFriendRequest(userId: string, id: number) {
     try {
       const friendRequests = await this.friendRequestRepository.getReceivedFRs(userId);
-      if (friendRequests.some((fr) => fr.requested_id === userId)) {
-        return await this.friendRequestRepository.acceptFriendRequest(id);
+      if (friendRequests.some((fr) => fr.friend_request_id === id)) {
+        const response = await this.friendRequestRepository.acceptFriendRequest(id);
+        const parsedResponse = {
+          friendship_id: response.friendship_id,
+          user_id: response.user.user_id,
+          username: response.user.username,
+          avatar: response.user.avatar,
+        };
+        return parsedResponse;
       } else {
         throw new NotAcceptableException();
       }
