@@ -25,12 +25,12 @@ export class MessagesGateway {
 
     this.timeoutHandle = setTimeout(
       () => {
-        this.sendMessagesToDatabase();
+        this.sendMessagesToDB();
       },
       1000 * 60 * 5,
     );
   }
-  private async sendMessagesToDatabase(): Promise<void> {
+  private async sendMessagesToDB(): Promise<void> {
     if (this.lock) return;
     this.lock = true;
 
@@ -89,11 +89,11 @@ export class MessagesGateway {
       this.setupTimeout();
     }
     if (this.messagesCache.length >= 15) {
-      this.sendMessagesToDatabase();
+      this.sendMessagesToDB();
     }
   }
 
   OnModuleDestroy() {
-    this.sendMessagesToDatabase();
+    this.sendMessagesToDB();
   }
 }

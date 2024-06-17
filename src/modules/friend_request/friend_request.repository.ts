@@ -36,6 +36,12 @@ export class FriendRequestRepository {
         requester_id: userId,
         requested_id: friendId,
       },
+      select: {
+        friend_request_id: true,
+        requester_id: true,
+        requested_id: true,
+        requester: true,
+      },
     });
   }
   async acceptFriendRequest(friendRequestId: number) {

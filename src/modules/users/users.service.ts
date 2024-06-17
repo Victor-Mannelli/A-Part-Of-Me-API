@@ -75,8 +75,19 @@ export class UsersService {
       });
       const strangers = await this.usersRepository.findNewPossibleFriends([...userFriendsIds, userId]);
       const FRs = await this.friendRequestRepository.getFriendRequests(userId);
+      const parsedFRs = FRs.map((e) => {
+        return {
+          friend_request_id: e.friend_request_id,
+          requested_id: e.requested_id,
+          requester: {
+            user_id: e.requester.user_id,
+            username: e.requester.username,
+            avatar: e.requester.avatar,
+          },
+        };
+      });
 
-      return { strangers: [...strangers], friendRequests: [...FRs] };
+      return { strangers: [...strangers], friendRequests: [...parsedFRs] };
     } catch (error) {
       throw new NotAcceptableException();
     }

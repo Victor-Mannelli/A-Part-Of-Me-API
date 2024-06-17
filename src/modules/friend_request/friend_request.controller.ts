@@ -5,6 +5,12 @@ import { FriendRequestService } from './friend_request.service';
 export class FriendRequestController {
   constructor(private readonly friendRequestService: FriendRequestService) {}
 
+  @Get('All')
+  async getAllFRsUserRelated(@Response() res) {
+    const response = await this.friendRequestService.getAllFriendRequests(res.locals.user_id);
+    res.status(200).send(response);
+  }
+
   @Get()
   async getFriendRequests(@Response() res) {
     const response = await this.friendRequestService.getFriendRequests(res.locals.user_id);

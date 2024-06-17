@@ -9,6 +9,22 @@ export class FriendRequestService {
     readonly usersRepository: UsersRepository,
   ) {}
 
+  async getAllFriendRequests(userId: string) {
+    const response = await this.friendRequestRepository.getFriendRequests(userId);
+    const parsedResponse = response.map((e) => {
+      return {
+        friend_request_id: e.friend_request_id,
+        requested_id: e.requested_id,
+        requester: {
+          user_id: e.requester.user_id,
+          username: e.requester.username,
+          avatar: e.requester.avatar,
+        },
+      };
+    });
+    return parsedResponse;
+  }
+
   async getFriendRequests(userId: string) {
     const response = await this.friendRequestRepository.getReceivedFRs(userId);
     const parsedResponse = response.map((e) => {
@@ -26,7 +42,18 @@ export class FriendRequestService {
   }
   async sendFriendRequests({ userId, friendId }) {
     try {
-      return await this.friendRequestRepository.postFriendRequest(userId, friendId);
+      const response = await this.friendRequestRepository.postFriendRequest(userId, friendId);
+      const parsedResponse = {
+        friend_request_id: response.friend_request_id,
+        requested_id: response.requested_id,
+        requester: {
+          user_id: response.requester.user_id,
+          username: response.requester.username,
+          avatar: response.requester.avatar,
+        },
+      };
+
+      return parsedResponse;
     } catch (error) {
       throw new NotFoundException();
     }
