@@ -30,5 +30,6 @@ export type JwtPayload = {
   user_id: string;
   username: string;
   email: string;
-  avatar: string;
+  avatar: Buffer;
+  banner: Buffer;
 };

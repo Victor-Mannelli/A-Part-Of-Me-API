@@ -32,9 +32,10 @@ export class UsersController {
     return await this.usersService.login(loginDto);
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(updateUserDto);
+  @Patch()
+  async update(@Response() res, @Body() updateUserDto: UpdateUserDto) {
+    const response = await this.usersService.update(res.locals.user_id, updateUserDto);
+    return response;
   }
   @Delete(':id')
   async remove(@Param('id') id: string) {

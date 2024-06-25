@@ -52,6 +52,7 @@ export class UsersService {
       email: user.email,
       username: user.username,
       avatar: user.avatar,
+      banner: user.banner,
     };
     return { token: jwt.sign(newJwt, process.env.JWT_SECRET) };
   }
@@ -93,10 +94,11 @@ export class UsersService {
     }
   }
 
-  async update(updateUserDto: UpdateUserDto) {
+  async update(userId: string, updateUserDto: UpdateUserDto) {
+    //! need to refactor this for updating other user fields
     const newHashedPassword = bcrypt.hashSync(updateUserDto.newPassword, 10);
     return await this.usersRepository.changePassword({
-      userId: updateUserDto.userId,
+      userId,
       newHashedPassword,
     });
   }
