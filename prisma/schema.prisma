@@ -12,7 +12,8 @@ model User {
   email                  String          @unique
   password               String
   username               String          @unique
-  avatar                 String?
+  avatar                 Bytes?
+  banner                 Bytes?
   receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
   sentFriendRequests     FriendRequest[] @relation("SentFriendRequests")
   friendshipsAsFriend    Friendship[]    @relation("FriendshipsAsFriend")
