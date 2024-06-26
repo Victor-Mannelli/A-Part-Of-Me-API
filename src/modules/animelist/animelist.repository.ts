@@ -21,7 +21,7 @@ export class AnimelistRepository {
     });
   }
 
-  async upsertUsersAnimesStatus(userAnimeStatus) {
+  async upsertUsersAnimelist(userAnimeStatus) {
     let updateObj: Omit<UpdateAnimeStatusType, 'user_id' | 'anime_id'>;
     let createObj: UpdateAnimeStatusType;
 
