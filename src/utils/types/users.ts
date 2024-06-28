@@ -7,6 +7,20 @@ export type RegistrationBody = {
 export type CreateNewUser = Omit<RegistrationBody, 'password' | 'confirmPassword'> & {
   hashedPassword: string;
 };
+export type UpdateUser = {
+  user_id: string;
+  avatar?: string;
+  banner?: string;
+  username?: string;
+  newPassword?: string;
+};
+export type UpdateUserWithImagesAsBytes = {
+  user_id: string;
+  avatar?: Buffer;
+  banner?: Buffer;
+  username?: string;
+  newPassword?: string;
+};
 
 export type LoginBody = {
   login: string;
@@ -30,6 +44,6 @@ export type JwtPayload = {
   user_id: string;
   username: string;
   email: string;
-  avatar: Buffer;
-  banner: Buffer;
+  // avatar: string | Buffer;
+  // banner: string | Buffer;
 };

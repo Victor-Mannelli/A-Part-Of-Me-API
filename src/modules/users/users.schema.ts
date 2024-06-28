@@ -12,6 +12,9 @@ export const LoginSchema = z.object({
 });
 
 export const UpdateUserSchema = z.object({
-  userId: z.string(),
-  newPassword: z.boolean().optional(),
+  user_id: z.string(),
+  avatar: z.string().optional(),
+  banner: z.string().optional(),
+  username: z.string().optional(),
+  newPassword: z.string().optional(),
 });

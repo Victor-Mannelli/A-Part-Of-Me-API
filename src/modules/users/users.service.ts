@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable, NotAcceptableException, UnauthorizedException } from '@nestjs/common';
 import { FriendRequestRepository } from '../friend_request/friend_request.repository';
+import { CreateUserSchema, LoginSchema, UpdateUserSchema } from './users.schema';
 import { FriendshipRepository } from '../friendship/friendship.repository';
-import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
-import { CreateUserSchema, LoginSchema } from './users.schema';
+import { CreateUserDto, LoginDto } from './users.dto';
 import { UsersRepository } from './users.repository';
-import { JwtPayload } from 'src/utils/types';
+import { JwtPayload, UpdateUser } from 'src/utils/types';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 
@@ -48,13 +48,20 @@ export class UsersService {
       throw new UnauthorizedException();
     }
     const newJwt: JwtPayload = {
-      user_id: user.user_id.toString(),
+      user_id: user.user_id,
       email: user.email,
       username: user.username,
-      avatar: user.avatar,
-      banner: user.banner,
+      // avatar: user.avatar,
+      // banner: user.banner,
     };
-    return { token: jwt.sign(newJwt, process.env.JWT_SECRET) };
+    const userData = {
+      user_id: user.user_id,
+      email: user.email,
+      username: user.username,
+      avatar: user.avatar.toString('base64'),
+      banner: user.banner.toString('base64'),
+    };
+    return { token: jwt.sign(newJwt, process.env.JWT_SECRET), userData };
   }
 
   async findAll(id: string) {
@@ -94,13 +101,28 @@ export class UsersService {
     }
   }
 
-  async update(userId: string, updateUserDto: UpdateUserDto) {
-    //! need to refactor this for updating other user fields
-    const newHashedPassword = bcrypt.hashSync(updateUserDto.newPassword, 10);
-    return await this.usersRepository.changePassword({
-      userId,
-      newHashedPassword,
-    });
+  async update(updateUserDto: UpdateUser) {
+    UpdateUserSchema.parse(updateUserDto);
+    if (updateUserDto.newPassword) {
+      const newHashedPassword = bcrypt.hashSync(updateUserDto.newPassword, 10);
+      updateUserDto.newPassword = newHashedPassword;
+    }
+    const updateUserObject = {
+      user_id: updateUserDto.user_id,
+      ...(updateUserDto.avatar && { avatar: Buffer.from(updateUserDto.avatar, 'base64') }),
+      ...(updateUserDto.banner && { banner: Buffer.from(updateUserDto.banner, 'base64') }),
+      ...(updateUserDto.username && { username: updateUserDto.username }),
+      ...(updateUserDto.newPassword && { password: updateUserDto.newPassword }),
+    };
+    const response = await this.usersRepository.updateUser(updateUserObject);
+    const parsedResponse = {
+      user_id: response.user_id,
+      email: response.email,
+      username: response.username,
+      avatar: response.avatar?.toString('base64'),
+      banner: response.banner?.toString('base64'),
+    };
+    return parsedResponse;
   }
   async remove(id: string) {
     return await this.usersRepository.deleteAccount(id);

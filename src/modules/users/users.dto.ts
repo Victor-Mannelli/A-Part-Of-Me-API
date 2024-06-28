@@ -18,7 +18,11 @@ export class LoginDto {
 }
 export class UpdateUserDto {
   @ApiProperty()
-  userId: string;
+  avatar?: string;
   @ApiProperty()
-  newPassword: string;
+  banner?: string;
+  @ApiProperty()
+  username?: string;
+  @ApiProperty()
+  newPassword?: string;
 }

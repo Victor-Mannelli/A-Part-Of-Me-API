@@ -34,7 +34,7 @@ export class UsersController {
 
   @Patch()
   async update(@Response() res, @Body() updateUserDto: UpdateUserDto) {
-    const response = await this.usersService.update(res.locals.user_id, updateUserDto);
+    const response = await this.usersService.update({ ...updateUserDto, user_id: res.locals.user_id });
     return response;
   }
   @Delete(':id')

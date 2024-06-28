@@ -1,38 +1,32 @@
-import { PrismaClient } from '@prisma/client';
+import { ChangePassword, CreateNewUser, prisma, UpdateUserWithImagesAsBytes } from 'src/utils';
 import { Injectable } from '@nestjs/common';
-import * as types from 'src/utils/types';
-import { prisma } from 'src/utils';
 
 @Injectable()
 export class UsersRepository {
-  prisma: PrismaClient;
-  constructor() {
-    this.prisma = prisma;
-  }
   async checkEmail(email: string) {
-    return await this.prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: {
         email,
       },
     });
   }
   async checkUsername(username: string) {
-    return await this.prisma.user.findFirst({
+    return await prisma.user.findFirst({
       where: {
         username,
       },
     });
   }
   async findUserById(userId: string) {
-    return await this.prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: {
         user_id: userId,
       },
     });
   }
 
-  async createNewUser(params: types.CreateNewUser) {
-    await this.prisma.user.create({
+  async createNewUser(params: CreateNewUser) {
+    await prisma.user.create({
       data: {
         email: params.email,
         username: params.username,
@@ -42,7 +36,7 @@ export class UsersRepository {
   }
 
   async findUser(userId: string) {
-    return await this.prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: {
         user_id: userId,
       },
@@ -54,7 +48,7 @@ export class UsersRepository {
     });
   }
   async getUsersList(userId: string) {
-    return await this.prisma.user.findMany({
+    return await prisma.user.findMany({
       select: {
         user_id: true,
         username: true,
@@ -68,7 +62,7 @@ export class UsersRepository {
     });
   }
   async findNewPossibleFriends(excludedUsers: string[]) {
-    return await this.prisma.user.findMany({
+    return await prisma.user.findMany({
       select: {
         user_id: true,
         username: true,
@@ -82,8 +76,8 @@ export class UsersRepository {
     });
   }
 
-  async changePassword(params: types.ChangePassword) {
-    await this.prisma.user.update({
+  async changePassword(params: ChangePassword) {
+    await prisma.user.update({
       where: {
         user_id: params.userId,
       },
@@ -92,8 +86,16 @@ export class UsersRepository {
       },
     });
   }
+  async updateUser(updateUserDto: UpdateUserWithImagesAsBytes) {
+    return await prisma.user.update({
+      where: {
+        user_id: updateUserDto.user_id,
+      },
+      data: updateUserDto,
+    });
+  }
   async deleteAccount(userId: string) {
-    await this.prisma.user.delete({
+    await prisma.user.delete({
       where: {
         user_id: userId,
       },
