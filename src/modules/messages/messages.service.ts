@@ -20,7 +20,10 @@ export class MessagesService {
       return {
         message_id: message.message_id,
         message: message.message,
-        author: message.author,
+        author: {
+          username: message.author.username,
+          avatar: message.author.avatar?.toString('base64'),
+        },
         created_at: message.created_at,
       };
     });

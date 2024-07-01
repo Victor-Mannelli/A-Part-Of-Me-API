@@ -12,7 +12,7 @@ export class FriendshipService {
         friendship_id: e.friendship_id,
         user_id: e.friend_id === userId ? e.user_id : e.friend_id,
         username: e.friend_id === userId ? e.user.username : e.friend.username,
-        avatar: e.friend_id === userId ? e.user.avatar : e.friend.avatar,
+        avatar: e.friend_id === userId ? e.user.avatar?.toString('base64') : e.friend.avatar?.toString('base64'),
       };
     });
     return parsedResponse;
