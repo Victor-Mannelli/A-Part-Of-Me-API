@@ -58,8 +58,8 @@ export class UsersService {
       user_id: user.user_id,
       email: user.email,
       username: user.username,
-      avatar: user.avatar?.toString('base64'),
-      banner: user.banner?.toString('base64'),
+      avatar: user.avatar,
+      banner: user.banner,
     };
     return { token: jwt.sign(newJwt, process.env.JWT_SECRET), userData };
   }
@@ -119,8 +119,8 @@ export class UsersService {
       user_id: response.user_id,
       email: response.email,
       username: response.username,
-      avatar: response.avatar?.toString('base64'),
-      banner: response.banner?.toString('base64'),
+      avatar: response.avatar,
+      banner: response.banner,
     };
     return parsedResponse;
   }
