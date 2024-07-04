@@ -18,8 +18,9 @@ export class AnimelistService {
     return await this.animelistRepository.upsertUsersAnimelist(userAnimeStatus);
   }
 
-  async updateUserProgress({ userId, animeId, progress }: { userId: string; animeId: number; progress: number }) {
+  async updateUserProgress({ userId, animeId, progress, status }: { userId: string; animeId: number; progress: number; status: string | null }) {
     return await this.animelistRepository.patchUserProgress({
+      status,
       userId,
       animeId,
       progress,

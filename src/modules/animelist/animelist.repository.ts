@@ -43,7 +43,7 @@ export class AnimelistRepository {
     });
   }
 
-  async patchUserProgress({ userId, animeId, progress }: { userId: string; animeId: number; progress: number }) {
+  async patchUserProgress({ userId, animeId, progress, status }: { userId: string; animeId: number; progress: number; status: string | null }) {
     return await prisma.userAnimeList.update({
       where: {
         user_id_anime_id: {
@@ -53,6 +53,7 @@ export class AnimelistRepository {
       },
       data: {
         progress,
+        ...(status && { status }),
       },
     });
   }

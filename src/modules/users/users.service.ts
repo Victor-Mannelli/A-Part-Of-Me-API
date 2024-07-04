@@ -68,7 +68,14 @@ export class UsersService {
     return await this.usersRepository.getUsersList(id);
   }
   async findOne(id: string) {
-    return await this.usersRepository.findUser(id);
+    const response: any = await this.usersRepository.findUser(id);
+    const parsedResponse = {
+      username: response.username,
+      avatar: response.avatar,
+      banner: response.banner,
+      userAnimelist: [...response.UserAnimeList],
+    };
+    return parsedResponse;
   }
 
   async getStrangersAndFRs(userId: string) {

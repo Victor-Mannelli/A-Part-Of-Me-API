@@ -24,6 +24,16 @@ export class UsersRepository {
       },
     });
   }
+  async findUser(userId: string) {
+    return await prisma.user.findUnique({
+      where: {
+        user_id: userId,
+      },
+      include: {
+        UserAnimeList: true,
+      },
+    });
+  }
 
   async createNewUser(params: CreateNewUser) {
     await prisma.user.create({
@@ -35,18 +45,6 @@ export class UsersRepository {
     });
   }
 
-  async findUser(userId: string) {
-    return await prisma.user.findUnique({
-      where: {
-        user_id: userId,
-      },
-      select: {
-        username: true,
-        user_id: true,
-        avatar: true,
-      },
-    });
-  }
   async getUsersList(userId: string) {
     return await prisma.user.findMany({
       select: {

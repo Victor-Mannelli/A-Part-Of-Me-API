@@ -31,12 +31,13 @@ export class AnimelistController {
   }
 
   @Patch(':id')
-  async update(@Response() res, @Param('id') id: string, @Body() { progress }: { progress: number }) {
+  async update(@Response() res, @Param('id') id: string, @Body() { progress, status }: { progress: number; status: string | null }) {
     z.number().parse(progress);
     const response = await this.animelistService.updateUserProgress({
       userId: res.locals.user_id,
       animeId: +id,
       progress,
+      status,
     });
     res.status(200).send(response);
   }

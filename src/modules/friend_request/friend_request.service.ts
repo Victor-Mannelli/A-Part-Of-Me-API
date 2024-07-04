@@ -42,10 +42,15 @@ export class FriendRequestService {
   }
   async sendFriendRequests({ userId, friendId }) {
     try {
-      const FRs = await this.friendRequestRepository.getSentFRs(userId);
-      if (FRs.some((Fr) => Fr.requested_id === friendId)) {
-        throw new ConflictException();
-      }
+      const FRs = await this.friendRequestRepository.getFriendRequests(userId);
+      FRs.forEach(async (Fr) => {
+        if (Fr.requested_id === friendId) {
+          throw new ConflictException();
+        }
+        if (Fr.requester_id === friendId) {
+          return await this.friendRequestRepository.acceptFriendRequest(Fr.friend_request_id);
+        }
+      });
       const response = await this.friendRequestRepository.postFriendRequest(userId, friendId);
       const parsedResponse = {
         friend_request_id: response.friend_request_id,
