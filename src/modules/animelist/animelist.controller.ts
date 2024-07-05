@@ -9,10 +9,16 @@ export class AnimelistController {
   constructor(private readonly animelistService: AnimelistService) {}
 
   @Get()
-  async findOne(@Response() res) {
+  async findUserAnimelistByToken(@Response() res) {
     const response = await this.animelistService.findOne(res.locals.user_id);
     res.status(200).send(response);
   }
+  @Get('/anime/:id')
+  async findUserInfoOnSingleAnime(@Response() res, @Param('id') id: string) {
+    const response = await this.animelistService.findUserAnime({ user_id: res.locals.user_id, anime_id: +id });
+    res.status(200).send(response);
+  }
+
   @Get('/watching')
   async findFollowedAnimes(@Response() res) {
     const response = await this.animelistService.findFollowedAnimes(res.locals.user_id);

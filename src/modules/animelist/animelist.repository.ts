@@ -11,6 +11,16 @@ export class AnimelistRepository {
       },
     });
   }
+  async findUserAnime(user_id: string, anime_id: number) {
+    return await prisma.userAnimeList.findUnique({
+      where: {
+        user_id_anime_id: {
+          user_id,
+          anime_id,
+        },
+      },
+    });
+  }
 
   async findFollowedAnimes(userId: string) {
     return await prisma.userAnimeList.findMany({

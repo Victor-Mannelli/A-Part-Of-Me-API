@@ -9,6 +9,9 @@ export class AnimelistService {
   async findOne(userId: string) {
     return await this.animelistRepository.findOne(userId);
   }
+  async findUserAnime({ user_id, anime_id }: { user_id: string; anime_id: number }) {
+    return await this.animelistRepository.findUserAnime(user_id, anime_id);
+  }
 
   async findFollowedAnimes(userId: string) {
     return await this.animelistRepository.findFollowedAnimes(userId);
