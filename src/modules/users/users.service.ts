@@ -1,10 +1,10 @@
-import { HttpException, HttpStatus, Injectable, NotAcceptableException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotAcceptableException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { FriendRequestRepository } from '../friend_request/friend_request.repository';
 import { CreateUserSchema, LoginSchema, UpdateUserSchema } from './users.schema';
 import { FriendshipRepository } from '../friendship/friendship.repository';
+import { JwtPayload, UpdateUser } from 'src/utils/types';
 import { CreateUserDto, LoginDto } from './users.dto';
 import { UsersRepository } from './users.repository';
-import { JwtPayload, UpdateUser } from 'src/utils/types';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 
@@ -69,11 +69,12 @@ export class UsersService {
   }
   async findOne(id: string) {
     const response: any = await this.usersRepository.findUser(id);
+    if (!response) throw new NotFoundException();
     const parsedResponse = {
       username: response.username,
       avatar: response.avatar,
       banner: response.banner,
-      userAnimelist: [...response.UserAnimeList],
+      usersAnimelist: [...response.UserAnimeList],
     };
     return parsedResponse;
   }
