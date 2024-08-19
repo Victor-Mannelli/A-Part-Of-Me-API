@@ -54,7 +54,14 @@ export class FriendRequestGateway {
   ): Promise<void> {
     try {
       const friendRequest = await this.sendFriendRequest(friendRequestBody.user_id, friendRequestBody.friend_id);
-      this.server.emit('friendRequest', { friendRequest, sender: client.id });
+      this.server.emit('friendRequest', {
+        ...friendRequest,
+        requester: {
+          ...friendRequest.requester,
+          avatar: { data: friendRequest.requester.avatar },
+        },
+        sender: client.id,
+      });
     } catch (error) {
       throw new BadRequestException();
     }
