@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FriendRequestRepository } from './friend_request.repository';
 import { ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
@@ -43,14 +44,15 @@ export class FriendRequestService {
   async sendFriendRequests({ userId, friendId }) {
     try {
       const FRs = await this.friendRequestRepository.getFriendRequests(userId);
-      FRs.forEach(async (Fr) => {
+      for (const Fr of FRs) {
         if (Fr.requested_id === friendId) {
           throw new ConflictException();
         }
         if (Fr.requester_id === friendId) {
-          return await this.friendRequestRepository.acceptFriendRequest(Fr.friend_request_id);
+          await this.friendRequestRepository.acceptFriendRequest(Fr.friend_request_id);
+          return;
         }
-      });
+      }
       const response = await this.friendRequestRepository.postFriendRequest(userId, friendId);
       const parsedResponse = {
         friend_request_id: response.friend_request_id,
@@ -61,7 +63,6 @@ export class FriendRequestService {
           avatar: response.requester.avatar,
         },
       };
-
       return parsedResponse;
     } catch (error) {
       throw new NotFoundException();

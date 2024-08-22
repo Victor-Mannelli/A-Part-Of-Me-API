@@ -34,17 +34,17 @@ export class FriendRequestGateway {
   server: Server;
 
   @SubscribeMessage('joinFrRoom')
-  handleJoinRoom(@MessageBody() room: string, @ConnectedSocket() client: Socket): void {
+  handleJoinRoom(@MessageBody() MessageBody: string, @ConnectedSocket() client: Socket): void {
     // console.log('user entered FR ws');
-    client.join(room);
-    client.emit('joinedRoom', room);
+    client.join(MessageBody);
+    client.emit('joinedRoom', MessageBody);
   }
 
   @SubscribeMessage('leaveFrRoom')
-  handleLeaveRoom(@MessageBody() room: string, @ConnectedSocket() client: Socket): void {
+  handleLeaveRoom(@MessageBody() MessageBody: string, @ConnectedSocket() client: Socket): void {
     // console.log('user left FR ws');
-    client.leave(room);
-    client.emit('leftRoom', room);
+    client.leave(MessageBody);
+    client.emit('leftRoom', MessageBody);
   }
 
   @SubscribeMessage('friendRequest')
@@ -52,19 +52,15 @@ export class FriendRequestGateway {
     @MessageBody() friendRequestBody: { room: string; user_id: string; friend_id: string },
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    try {
-      const friendRequest = await this.sendFriendRequest(friendRequestBody.user_id, friendRequestBody.friend_id);
-      this.server.emit('friendRequest', {
-        ...friendRequest,
-        requester: {
-          ...friendRequest.requester,
-          avatar: { data: friendRequest.requester.avatar },
-        },
-        sender: client.id,
-      });
-    } catch (error) {
-      throw new BadRequestException();
-    }
+    const response = await this.sendFriendRequest(friendRequestBody.user_id, friendRequestBody.friend_id);
+    const friendRequest = {
+      ...response,
+      requester: {
+        ...response.requester,
+        avatar: { data: response.requester.avatar },
+      },
+    };
+    this.server.emit('friendRequest', { friendRequest, sender: client.id });
   }
 
   @SubscribeMessage('deleteFR')
@@ -86,7 +82,11 @@ export class FriendRequestGateway {
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
     try {
-      const acceptedFR = await this.acceptFriendRequest(friendRequestBody.user_id, friendRequestBody.friendRequestId);
+      const response = await this.acceptFriendRequest(friendRequestBody.user_id, friendRequestBody.friendRequestId);
+      const acceptedFR = {
+        ...response,
+        avatar: { data: response.avatar },
+      };
       this.server.emit('acceptFR', { acceptedFR, sender: client.id });
       this.server.emit('deleteFR', { deletedFR: { friend_request_id: friendRequestBody.friendRequestId }, sender: client.id });
     } catch (error) {
