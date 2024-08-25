@@ -49,14 +49,15 @@ model Friendship {
 }
 
 model Message {
-  message_id  String @id @unique
+  message_id  String  @id @unique
   message     String
   author_id   String
   receiver_id String
   room_id     String
   created_at  String
-  author      User   @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
-  receiver    User   @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
+  edited      Boolean @default(false)
+  author      User    @relation("MessageAuthor", fields: [author_id], references: [user_id], onDelete: Cascade)
+  receiver    User    @relation("MessageReceiver", fields: [receiver_id], references: [user_id], onDelete: Cascade)
 
   @@map("messages")
 }

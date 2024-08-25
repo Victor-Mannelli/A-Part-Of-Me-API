@@ -37,6 +37,10 @@ export class MessagesService {
     await this.messagesRepository.postManyMessages(messages);
   }
 
+  async updateMessage({ message_id, newMessage }: { message_id: string; newMessage: string }) {
+    await this.messagesRepository.updateMessage({ message_id, newMessage });
+  }
+
   async remove(id: string) {
     return await this.messagesRepository.delete(id);
   }

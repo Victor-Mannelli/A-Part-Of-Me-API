@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { MessagesService } from './messages.service';
@@ -61,17 +62,7 @@ export class MessagesGateway {
       this.lock = false;
     }
   }
-
-  @WebSocketServer()
-  server: Server;
-
-  @SubscribeMessage('joinRoom')
-  async handleJoinRoom(@MessageBody() JoinRoomBody: { room: string; user_id: string }, @ConnectedSocket() client: Socket): Promise<void> {
-    z.object({ room: z.string(), user_id: z.string() }).parse(JoinRoomBody);
-    client.join(JoinRoomBody.room);
-    // console.log('user joined');
-    // client.emit('joinedRoom', room);
-
+  private async storeRefreshCasheAndReturnMessages(JoinRoomBody: { room: string; user_id: string }) {
     const cachedMessages = this.messagesCache.reduce((acc, msg) => {
       if (msg.room_id === JoinRoomBody.room) {
         acc.push({
@@ -93,7 +84,23 @@ export class MessagesGateway {
       },
       created_at: message.created_at,
     }));
-    client.emit('joinedRoom', { storedMessages: [...parsedHistoricalMessages, ...cachedMessages] });
+    const storedMessages = [...parsedHistoricalMessages, ...cachedMessages];
+    return storedMessages;
+  }
+
+  @WebSocketServer()
+  server: Server;
+
+  @SubscribeMessage('joinRoom')
+  async handleJoinRoom(@MessageBody() JoinRoomBody: { room: string; user_id: string }, @ConnectedSocket() client: Socket): Promise<void> {
+    z.object({ room: z.string(), user_id: z.string() }).parse(JoinRoomBody);
+    client.join(JoinRoomBody.room);
+    // console.log('user joined');
+    // client.emit('joinedRoom', room);
+
+    const storedMessages = await this.storeRefreshCasheAndReturnMessages(JoinRoomBody);
+    // console.log(storedMessages, 'storedMessages joinRoom');
+    client.emit('joinedRoom', storedMessages);
   }
 
   @SubscribeMessage('leaveRoom')
@@ -128,6 +135,16 @@ export class MessagesGateway {
     if (this.messagesCache.length >= 15) {
       this.sendMessagesToDB();
     }
+  }
+
+  @SubscribeMessage('deleteMessage')
+  async handleDeleteMessage(
+    @MessageBody() messageBody: { room: string; user_id: string; message_id: string },
+    // @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    await this.messagesService.updateMessage({ message_id: messageBody.message_id, newMessage: 'Deleted Message' });
+    const messages = await this.storeRefreshCasheAndReturnMessages({ room: messageBody.room, user_id: messageBody.user_id });
+    this.server.to(messageBody.room).emit('joinedRoom', messages);
   }
 
   OnModuleDestroy() {

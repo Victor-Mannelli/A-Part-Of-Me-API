@@ -78,6 +78,18 @@ export class MessagesRepository {
     });
   }
 
+  async updateMessage({ message_id, newMessage }: { message_id: string; newMessage: string }) {
+    return await prisma.message.update({
+      where: {
+        message_id,
+      },
+      data: {
+        message: newMessage,
+        edited: true,
+      },
+    });
+  }
+
   async delete(id: string) {
     return await prisma.message.delete({
       where: {
