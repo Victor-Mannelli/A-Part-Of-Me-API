@@ -13,6 +13,7 @@ export class MessagesRepository {
       include: {
         author: {
           select: {
+            user_id: true,
             username: true,
             avatar: true,
           },

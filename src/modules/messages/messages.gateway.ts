@@ -79,6 +79,7 @@ export class MessagesGateway {
       message_id: message.message_id,
       message: message.message,
       author: {
+        id: message.author.user_id,
         username: message.author.username,
         avatar: message.author.avatar.toString('base64'),
       },
@@ -137,12 +138,12 @@ export class MessagesGateway {
     }
   }
 
-  @SubscribeMessage('deleteMessage')
+  @SubscribeMessage('editMessage')
   async handleDeleteMessage(
-    @MessageBody() messageBody: { room: string; user_id: string; message_id: string },
+    @MessageBody() messageBody: { room: string; user_id: string; message_id: string; newMessage: string },
     // @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    await this.messagesService.updateMessage({ message_id: messageBody.message_id, newMessage: 'Deleted Message' });
+    await this.messagesService.updateMessage({ message_id: messageBody.message_id, newMessage: messageBody.newMessage });
     const messages = await this.storeRefreshCasheAndReturnMessages({ room: messageBody.room, user_id: messageBody.user_id });
     this.server.to(messageBody.room).emit('joinedRoom', messages);
   }
